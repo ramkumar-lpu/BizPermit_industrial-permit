@@ -98,10 +98,10 @@ export const TrustDisclaimerSection = () => {
 
             <div className="space-y-2 text-xs text-stone-700">
               <h4 className="text-sm font-bold text-brand-charcoal">
-                Statutory Notice & Prototype Disclaimer (SIH26130)
+                Statutory Regulatory Notice & Terms of Service
               </h4>
               <p className="leading-relaxed">
-                <strong>BizPermit is an independent national industrial compliance research prototype</strong> developed to address Problem Statement SIH26130. It is <strong>NOT an official portal of the Government of India</strong>, is not affiliated with the National Single Window System (NSWS) or Invest India, and does not possess statutory power to grant, issue, or revoke industrial approvals, licenses, or permits.
+                <strong>BizPermit is an independent national industrial compliance and document management platform.</strong> It is <strong>NOT an official portal of the Government of India</strong>, is not affiliated with the National Single Window System (NSWS) or Invest India, and does not possess statutory power to grant, issue, or revoke industrial approvals, licenses, or permits.
               </p>
               <p className="leading-relaxed text-stone-600">
                 All statutory filings, fee disbursements, and formal submissions must be completed through the respective competent authorities (e.g. State Single Window Portals, MoEFCC PARIVESH, PESO Online, FSSAI FoSCoS). BizPermit serves exclusively as an internal preparation, multi-location organization, and continuous compliance monitoring workspace for business enterprises.

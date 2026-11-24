@@ -20,17 +20,17 @@ from apps.notifications.repository import NotificationRepository
 
 
 # =============================================================================
-# Prototype Legal Disclaimer
+# Statutory Legal Disclaimer
 # =============================================================================
 GRIEVANCE_PROTOTYPE_DISCLAIMER = (
-    "BizPermit Prototype - SIH26130: Grievance Redressal Workspace. "
+    "BizPermit Grievance Redressal Workspace. "
     "Internal administrative resolution records do not constitute a statutory quasi-judicial decree "
     "or judicial remedy under Indian law. External statutory filings represent applicant self-attestation "
     "unless officially confirmed by the competent authority."
 )
 
 AUDIT_PROTOTYPE_DISCLAIMER = (
-    "BizPermit Prototype - SIH26130: Internal administrative grievance audit record. "
+    "BizPermit Internal administrative grievance audit record. "
     "Application-level append-only ledger. Does not represent statutory government department record."
 )
 

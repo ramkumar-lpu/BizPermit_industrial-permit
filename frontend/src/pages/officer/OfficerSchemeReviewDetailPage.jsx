@@ -220,12 +220,12 @@ export const OfficerSchemeReviewDetailPage = () => {
         </Link>
       </div>
 
-      {/* Prototype Non-Statutory Disclaimer Banner */}
+      {/* Non-Statutory Administrative Disclaimer Banner */}
       <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm">
         <div className="flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-900 leading-relaxed">
-            <span className="font-bold">SIH26130 PROTOTYPE ADMINISTRATIVE SCRUTINY NOTICE:</span> This evaluation workspace represents an internal BizPermit administrative review. Decisions, verification tags, and discrepancies recorded here do <span className="underline font-semibold">NOT</span> constitute a statutory government sanction, financial clearance, or legal approval under Central or State law.
+            <span className="font-bold">ADMINISTRATIVE SCRUTINY NOTICE:</span> This evaluation workspace represents an internal BizPermit administrative review. Decisions, verification tags, and discrepancies recorded here do <span className="underline font-semibold">NOT</span> constitute a statutory government sanction, financial clearance, or legal approval under Central or State law.
           </div>
         </div>
       </div>
@@ -611,7 +611,7 @@ export const OfficerSchemeReviewDetailPage = () => {
           <div className="bg-white rounded-xl max-w-lg w-full p-6 space-y-4 shadow-xl">
             <h3 className="text-sm font-bold text-brand-charcoal">Complete Administrative Evaluation</h3>
             <p className="text-xs text-stone-500">
-              Record the final internal administrative review outcome. All decisions carry the mandatory SIH26130 prototype notice.
+              Record the final internal administrative review outcome. All decisions carry the mandatory administrative statutory disclaimer.
             </p>
             <form onSubmit={handleCompleteReview} className="space-y-4">
               <div>
@@ -640,7 +640,7 @@ export const OfficerSchemeReviewDetailPage = () => {
               </div>
 
               <div className="bg-stone-50 p-2.5 rounded border border-stone-200 text-[10px] text-stone-500">
-                Notice attached to decision: <em className="text-stone-700">"BizPermit Prototype - SIH26130: Internal administrative evaluation under SIH26130. Does NOT constitute a statutory government sanction, clearance, or subsidy release."</em>
+                Notice attached to decision: <em className="text-stone-700">"BizPermit Administrative Notice: Internal administrative evaluation. Does NOT constitute a statutory government sanction, clearance, or subsidy release."</em>
               </div>
 
               <div className="flex justify-end gap-2">

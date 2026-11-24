@@ -123,11 +123,11 @@ export const GrievancesPage = () => {
         </div>
       </div>
 
-      {/* Prototype Legal Disclaimer Notice */}
+      {/* Administrative Legal Disclaimer Notice */}
       <div className="p-4 bg-amber-50/80 border border-amber-200 rounded-lg text-xs text-amber-900 flex items-start gap-3">
         <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
         <div>
-          <span className="font-semibold">SIH26130 Prototype Advisory:</span> Internal BizPermit grievance redressal processes operate under departmental administrative service targets. Resolution records do not constitute statutory judicial decrees. For external government representations, utilize Track B tracking.
+          <span className="font-semibold">Grievance Desk Advisory:</span> Internal BizPermit grievance redressal processes operate under departmental administrative service targets. Resolution records do not constitute statutory judicial decrees. For external government representations, utilize Track B tracking.
         </div>
       </div>
 

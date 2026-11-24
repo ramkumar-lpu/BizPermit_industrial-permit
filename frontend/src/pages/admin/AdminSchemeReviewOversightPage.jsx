@@ -109,7 +109,7 @@ export const AdminSchemeReviewOversightPage = () => {
         <div className="flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-900 leading-relaxed">
-            <span className="font-bold">SIH26130 PROTOTYPE GOVERNANCE NOTICE:</span> This National Review Oversight desk provides administrative workflow analytics and workload distribution across all Central and State departmental units. Records tracked here represent internal prototype evaluations and do not replace official statutory gazette portals.
+            <span className="font-bold">ADMINISTRATIVE OVERSIGHT NOTICE:</span> This National Review Oversight desk provides administrative workflow analytics and workload distribution across all Central and State departmental units. Records tracked here represent internal compliance evaluations and do not replace official statutory gazette portals.
           </div>
         </div>
       </div>

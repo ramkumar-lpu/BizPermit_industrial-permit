@@ -15,7 +15,7 @@ import { LandingFooter } from '../components/landing/LandingFooter';
 export const LandingPage = () => {
   return (
     <div className="min-h-screen flex flex-col bg-brand-cream text-brand-charcoal selection:bg-brand-sage/30">
-      {/* 1. Header with Prototype Banner and Navigation */}
+      {/* 1. Header with Navigation */}
       <LandingHeader />
 
       {/* Main Public Experience */}

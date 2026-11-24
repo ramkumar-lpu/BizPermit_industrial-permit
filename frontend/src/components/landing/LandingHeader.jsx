@@ -19,7 +19,7 @@ export const LandingHeader = () => {
                 BIZPERMIT
               </span>
               <span className="hidden sm:inline-block font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-brand-pale-sage text-brand-deep-sage font-bold border border-brand-sage/40">
-                SIH26130
+                v1.0 Enterprise
               </span>
             </div>
             <div className="text-[10px] text-stone-500 font-medium tracking-tight -mt-0.5 hidden sm:block">

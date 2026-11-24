@@ -349,13 +349,13 @@ export const SchemesCataloguePage = () => {
         </div>
       )}
 
-      {/* Prototype Statutory Disclaimer */}
+      {/* Statutory Disclaimer */}
       <div className="p-4 rounded-lg bg-amber-50/70 border border-amber-200/80 text-[11px] text-amber-900 flex items-start gap-3">
         <Info className="h-4 w-4 text-brand-amber shrink-0 mt-0.5" />
         <div className="space-y-0.5">
-          <div className="font-semibold">BizPermit SIH26130 Prototype Advisory Notice</div>
+          <div className="font-semibold">BizPermit Incentives & Subsidies Advisory Notice</div>
           <p className="text-amber-800">
-            BizPermit is a digital workspace prototype and preparation assistant. It does not possess delegated statutory authority to award subsidies, issue credit guarantees, or process state disbursements. Official filings must be concluded on the respective Government portals.
+            BizPermit is a digital compliance management platform and preparation assistant. It does not possess delegated statutory authority to award subsidies, issue credit guarantees, or process state disbursements. Official filings must be concluded on the respective Government portals.
           </p>
         </div>
       </div>

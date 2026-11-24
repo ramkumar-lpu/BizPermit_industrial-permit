@@ -801,7 +801,7 @@ def test_17_prototype_disclaimers_included_in_relevant_outputs(schemes_setup):
     assert resp_eval.status_code == 200
     eval_item = resp_eval.data["data"]["evaluations"][0]
     assert len(eval_item.get("disclaimers", [])) > 0
-    assert any("SIH26130" in d for d in eval_item["disclaimers"])
+    assert any("BizPermit Rule Engine" in d for d in eval_item["disclaimers"])
 
 
 # =============================================================================

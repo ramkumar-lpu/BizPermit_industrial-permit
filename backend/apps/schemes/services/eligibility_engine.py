@@ -107,7 +107,7 @@ class EligibilityEngine:
         criteria_results: List[Dict[str, Any]] = []
         financial_summary: Dict[str, Any] = {}
         disclaimers: List[str] = [
-            "Evaluated deterministically by BizPermit SIH26130 rule engine based on verified location profile.",
+            "Evaluated deterministically by BizPermit Rule Engine based on verified location profile.",
             "Final statutory sanction and disbursement is subject exclusively to formal scrutiny by the competent government authority."
         ]
 

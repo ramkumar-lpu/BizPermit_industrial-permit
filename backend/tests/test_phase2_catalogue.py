@@ -237,7 +237,7 @@ def test_06_approval_rbac_governance(business_client, officer_client, admin_clie
     new_approval_payload = {
         "approval_code": "TEST-APP-NOC",
         "title": "Special Industrial Environmental Permit",
-        "description": "Prototype approval for industrial testing",
+        "description": "Test approval for industrial verification",
         "tier": "STATE",
         "department_code": "GPCB-ENV",
         "state_code": "IN-GJ",

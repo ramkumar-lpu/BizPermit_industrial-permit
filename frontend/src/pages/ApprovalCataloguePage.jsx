@@ -132,7 +132,7 @@ export const ApprovalCataloguePage = () => {
       default:
         return (
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-600 bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
-            Prototype Demo
+            Platform Ready
           </span>
         );
     }
@@ -490,7 +490,7 @@ export const ApprovalCataloguePage = () => {
             {/* Modal Footer */}
             <div className="p-4 border-t border-stone-200 bg-stone-50 flex items-center justify-between">
               <span className="text-[10px] text-stone-500 italic">
-                BizPermit SIH26130 Prototype • Independent compliance guidance
+                BizPermit Compliance Intelligence • Independent compliance guidance
               </span>
               <Button size="sm" onClick={() => setSelectedApproval(null)}>
                 Close

@@ -133,12 +133,12 @@ export const OfficerSchemeReviewQueuePage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Prototype Disclaimer */}
+      {/* Administrative Disclaimer */}
       <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg shadow-sm">
         <div className="flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="text-xs text-amber-900 leading-relaxed">
-            <span className="font-bold">SIH26130 PROTOTYPE ADMINISTRATIVE NOTICE:</span> Scrutiny assessments and recommendation records generated on this desk represent internal BizPermit prototype administrative readiness reviews. They do <span className="underline font-semibold">NOT</span> constitute statutory government approvals, ministerial sanction orders, or legal subsidy clearance.
+            <span className="font-bold">DEPARTMENTAL SCRUTINY NOTICE:</span> Scrutiny assessments and recommendation records generated on this desk represent internal administrative readiness reviews. They do <span className="underline font-semibold">NOT</span> constitute statutory government approvals, ministerial sanction orders, or legal subsidy clearance.
           </div>
         </div>
       </div>

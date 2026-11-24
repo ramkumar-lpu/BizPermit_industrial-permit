@@ -2,7 +2,7 @@ import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 
 export const AlertBanner = ({ type, message }) => {
-  if (type === 'prototype' || !message) {
+  if (!message) {
     return null;
   }
 

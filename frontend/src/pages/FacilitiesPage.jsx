@@ -564,7 +564,7 @@ export const FacilitiesPage = () => {
               {/* Statutory Disclaimer */}
               <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-md text-[11px] text-amber-900 leading-relaxed">
                 <strong>Statutory Notice:</strong> {selectedEvaluation.data.disclaimer || (
-                  "BizPermit is an independent architectural prototype developed under SIH26130. " +
+                  "BizPermit is an independent enterprise compliance management platform. " +
                   "This automated roadmap is generated deterministically based on prevailing official statutes, " +
                   "gazette notifications, and citizen charters. It does not constitute legal counsel or a guarantee of approval grant."
                 )}

@@ -504,7 +504,7 @@ def test_06_required_audit_history_for_every_transition(hardening_setup):
     # Step 5: Officer records approval: RESUBMITTED -> APPROVED
     act3 = client_gj.post(f"/api/v1/officer/applications/{cto_app_id}/action", {
         "action": "APPROVE",
-        "remarks": "Prototype scrutiny complete. Technical requirements verified.",
+        "remarks": "Technical scrutiny complete. Requirements verified.",
         "valid_until": "2031-12-31"
     }, format="json")
     assert act3.status_code == 200

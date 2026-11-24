@@ -33,7 +33,7 @@ export const LandingFooter = () => {
             <div className="pt-2 flex items-center gap-3 text-stone-400 text-[11px] font-mono">
               <span className="flex items-center gap-1">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>SIH26130 Active Prototype</span>
+                <span>Enterprise Platform Active</span>
               </span>
               <span>•</span>
               <span>ISO 3166-2:IN Grid</span>
@@ -184,7 +184,7 @@ export const LandingFooter = () => {
       <div className="bg-[#242c27] py-4 border-t border-stone-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[10px] text-stone-400">
           <div>
-            © 2026 BizPermit. All rights reserved. Problem Statement SIH26130 • Independent Statutory Prototype.
+            © 2026 BizPermit. All rights reserved. Independent Statutory Compliance Platform.
           </div>
           <div className="text-stone-400">
             BizPermit is not a statutory body and does not issue licenses. Statutory applications must be filed with competent authorities.

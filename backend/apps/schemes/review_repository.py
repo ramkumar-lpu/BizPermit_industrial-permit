@@ -4,7 +4,7 @@ Implements internal administrative scrutiny desk for scheme dossiers, clarificat
 and an append-only audit trail.
 
 CRITICAL ARCHITECTURAL BOUNDARY:
-BizPermit is an independent prototype under SIH26130.
+BizPermit is an independent enterprise compliance management platform.
 Officer review actions are strictly internal BizPermit administrative assessments.
 They do NOT represent statutory government sanctions, subsidy releases, or formal legal clearances.
 """
@@ -66,7 +66,7 @@ class SchemeReviewAuditRepository(BaseRepository):
             "remarks": remarks.strip(),
             "metadata": metadata or {},
             "prototype_disclaimer": (
-                "BizPermit Prototype - SIH26130: Internal administrative audit record. "
+                "BizPermit Internal administrative audit record. "
                 "Does not represent statutory government department record."
             )
         }
@@ -791,7 +791,7 @@ class SchemeReviewRepository(BaseRepository):
             "reviewed_by_name": _get_user_attr(officer_user, "full_name", _get_user_attr(officer_user, "email")),
             "reviewed_at": now,
             "prototype_disclaimer": (
-                "SIH26130 PROTOTYPE NOTICE: This decision represents an internal BizPermit administrative "
+                "BIZPERMIT ADMINISTRATIVE NOTICE: This decision represents an internal BizPermit administrative "
                 "evaluation. It DOES NOT constitute a statutory government sanction, financial sanction order, "
                 "or formal credit guarantee clearance from the nodal authority."
             )

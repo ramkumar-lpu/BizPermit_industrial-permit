@@ -743,7 +743,7 @@ export const SchemeApplicationDetailPage = () => {
               </label>
 
               <div className="text-[10px] text-stone-500 pl-6">
-                <strong>Legal Notice:</strong> This record represents an internal user self-attestation within the BizPermit SIH26130 workspace. It does not constitute a cryptographic Digital Signature Certificate (DSC) under Section 3 of the Information Technology Act, 2000, nor does it guarantee government receipt or statutory clearance.
+                <strong>Legal Notice:</strong> This record represents an authorized enterprise self-attestation within the BizPermit workspace. It does not constitute a cryptographic Digital Signature Certificate (DSC) under Section 3 of the Information Technology Act, 2000, nor does it guarantee government receipt or statutory clearance.
               </div>
             </div>
 

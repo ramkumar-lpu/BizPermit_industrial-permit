@@ -187,7 +187,7 @@ export const AdminGrievanceOversightPage = () => {
           <Shield className="h-5 w-5 text-blue-600 mr-3 flex-shrink-0 mt-0.5" />
           <div className="text-xs text-blue-800 space-y-1">
             <p className="font-semibold text-blue-900">
-              National Redressal Governance Notice (SIH26130 Prototype)
+              National Redressal Governance Notice
             </p>
             <p>
               BizPermit provides an integrated single-window dispute tracking framework. Statutory decisions

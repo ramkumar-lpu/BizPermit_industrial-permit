@@ -96,10 +96,10 @@ export const OfficerQueuePage = () => {
         setSelectedApp(res.data.data);
         if (res.data.data.status === 'SUBMITTED') {
           setActionType('MARK_SCRUTINY');
-          setActionRemarks('Application dossier accepted for technical review by departmental scrutiny officer in prototype workflow.');
+          setActionRemarks('Application dossier accepted for technical review by departmental scrutiny officer.');
         } else if (res.data.data.status === 'UNDER_SCRUTINY' || res.data.data.status === 'RESUBMITTED') {
           setActionType('APPROVE');
-          setActionRemarks('All application parameters, facility drawings, and pollution abatement disclosures verified compliant in prototype evaluation.');
+          setActionRemarks('All application parameters, facility drawings, and pollution abatement disclosures verified compliant.');
         } else {
           setActionType('');
           setActionRemarks('');
@@ -212,7 +212,7 @@ export const OfficerQueuePage = () => {
       case 'RESUBMITTED':
         return <Badge variant="resubmitted">Query Resubmitted</Badge>;
       case 'APPROVED':
-        return <Badge variant="approved">Prototype Approved</Badge>;
+        return <Badge variant="approved">Approved</Badge>;
       case 'REJECTED':
         return <Badge variant="rejected">Rejected</Badge>;
       default:
@@ -227,7 +227,7 @@ export const OfficerQueuePage = () => {
         <div>
           <div className="flex items-center gap-2 text-xs font-mono tracking-wider text-brand-pale-sage uppercase font-bold">
             <Shield className="h-4 w-4 text-brand-amber" />
-            <span>Department Scrutiny Desk • Prototype Simulation</span>
+            <span>Department Scrutiny Desk • Administrative Workflow</span>
           </div>
           <h1 className="text-xl md:text-2xl font-bold mt-1 tracking-tight">
             {isSuperAdmin ? 'National Regulatory Scrutiny Queue' : `${deptCode} Regulatory Desk`}

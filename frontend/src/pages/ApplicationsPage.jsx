@@ -411,7 +411,7 @@ export const ApplicationsPage = () => {
       case 'RESUBMITTED':
         return <Badge variant="resubmitted">Query Resubmitted</Badge>;
       case 'APPROVED':
-        return <Badge variant="approved">Prototype Approved</Badge>;
+        return <Badge variant="approved">Approved</Badge>;
       case 'REJECTED':
         return <Badge variant="rejected">Rejected</Badge>;
       default:
@@ -1101,14 +1101,14 @@ export const ApplicationsPage = () => {
                     </div>
                   </div>
 
-                  {/* Mandatory Prototype Disclaimer */}
+                  {/* Mandatory Enterprise Filing Declaration */}
                   <div className="p-4 rounded-lg bg-stone-50 border border-stone-300 text-xs space-y-2">
                     <div className="flex items-center gap-1.5 font-bold text-brand-charcoal">
                       <Shield className="h-4 w-4 text-brand-walnut" />
-                      Prototype Filing Declaration & SIH26130 Regulatory Notice
+                      Enterprise Filing Declaration & Statutory Notice
                     </div>
                     <p className="text-stone-600 text-[11px] leading-relaxed">
-                      I affirm that the technical parameters and facility documentation submitted in this application dossier are accurate for prototype demonstration. I acknowledge that BizPermit is an independent Smart India Hackathon 2026 prototype (SIH26130) demonstration workspace and is NOT a government portal. It does not issue legally binding government approvals or replace official state/central single-window clearances.
+                      I affirm that the technical parameters, drawings, and facility disclosures submitted in this application dossier are accurate and authorized by the enterprise signatory. I acknowledge that BizPermit is an independent compliance preparation and tracking workspace. Statutory clearances and licenses remain subject to final verification and grant by the competent Central or State regulatory authorities.
                     </p>
                     <label className="flex items-center gap-2 cursor-pointer pt-1">
                       <input
@@ -1118,7 +1118,7 @@ export const ApplicationsPage = () => {
                         className="rounded border-stone-300 text-brand-deep-sage focus:ring-brand-sage h-4 w-4"
                       />
                       <span className="font-semibold text-brand-charcoal text-[11px]">
-                        I confirm submission to the internal prototype departmental scrutiny workflow.
+                        I confirm submission of this dossier for departmental administrative scrutiny and workflow review.
                       </span>
                     </label>
                   </div>
@@ -1240,14 +1240,14 @@ export const ApplicationsPage = () => {
                     ) : (
                       <XCircle className="h-4 w-4 text-rose-700" />
                     )}
-                    Prototype Scrutiny Decision: {selectedApp.decision_details.decision}
+                    Scrutiny Decision: {selectedApp.decision_details.decision}
                   </div>
                   <p><strong>Remarks:</strong> {selectedApp.decision_details.remarks}</p>
                   {selectedApp.decision_details.valid_until && (
                     <p><strong>Indicative Validity:</strong> {selectedApp.decision_details.valid_until}</p>
                   )}
                   <p className="text-[10px] text-stone-500 italic mt-1">
-                    * Internal prototype simulation record; does not constitute a legally binding government approval.
+                    * Internal compliance administrative record; statutory clearances remain subject to competent authority issuance.
                   </p>
                 </div>
               )}

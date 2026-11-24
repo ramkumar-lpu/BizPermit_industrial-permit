@@ -277,7 +277,7 @@ class OfficerReviewCompleteView(APIView):
     """
     Officer records internal review decision.
     Decisions: INTERNAL_VERIFIED, INTERNAL_REJECTED, DISCREPANCIES_NOTED.
-    Embeds non-statutory SIH26130 prototype disclaimer.
+    Embeds non-statutory administrative disclaimer.
     """
     permission_classes = [IsOwnerOrOfficer]
 

@@ -1,4 +1,4 @@
 """
 Government Schemes, Incentives & Subsidies Engine.
-Module 1 of Phase 6 for Project BizPermit (SIH26130).
+Government Schemes & Subsidies Module for BizPermit.
 """

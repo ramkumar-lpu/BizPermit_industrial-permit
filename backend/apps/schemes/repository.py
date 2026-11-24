@@ -989,7 +989,7 @@ class SchemeApplicationRepository(BaseRepository):
             "acknowledgement_vault_id": vault_ack_oid,
             "explicit_user_confirmation": True,
             "disclaimer": (
-                "USER_REPORTED_EXTERNAL_SUBMISSION: BizPermit is an independent SIH26130 prototype and has not "
+                "USER_REPORTED_EXTERNAL_SUBMISSION: BizPermit is an independent compliance platform and has not "
                 "independently verified this external portal filing with the government department."
             )
         }

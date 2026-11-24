@@ -2,7 +2,6 @@
 BIZPERMIT — PHASE 6 MODULE 2 AUTOMATED TEST SUITE
 Officer Review Workflow, Clarification Engine & Immutable Audit Log.
 
-Problem Statement: SIH26130
 Verifies 20 Core Security, Scoping, and State Machine Test Cases:
 1.  Valid officer assignment
 2.  Correct department scope
@@ -729,7 +728,7 @@ def test_19_no_false_government_approval_representation(review_setup):
     assert dossier["review_status"] == "REVIEW_COMPLETED"
     decision = dossier["review_decision"]
     assert decision["decision"] == "INTERNAL_VERIFIED"
-    assert "SIH26130 PROTOTYPE NOTICE" in decision["prototype_disclaimer"]
+    assert "BIZPERMIT ADMINISTRATIVE NOTICE" in decision["prototype_disclaimer"]
     assert "NOT constitute a statutory government sanction" in decision["prototype_disclaimer"]
 
 

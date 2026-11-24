@@ -162,7 +162,7 @@ export const OfficerGrievanceDetailPage = () => {
         resolution_summary: resolutionSummary.trim(),
         actions_taken: actionsTaken.trim(),
         preventive_measures: preventiveMeasures.trim() || undefined,
-        closure_remarks: 'Formal resolution passed under prototype adjudication workflow.'
+        closure_remarks: 'Formal resolution recorded under departmental administrative workflow.'
       });
       setShowResolveModal(false);
       fetchDetail();
@@ -337,13 +337,13 @@ export const OfficerGrievanceDetailPage = () => {
         </div>
       </div>
 
-      {/* Statutory Prototype Disclaimer */}
+      {/* Statutory Notice & Regulatory Boundary Disclaimer */}
       <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
         <div className="flex">
           <AlertTriangle className="h-5 w-5 text-amber-600 mr-3 flex-shrink-0 mt-0.5" />
           <div className="text-xs text-amber-800 space-y-1">
             <p className="font-semibold text-amber-900">
-              Statutory Scrutiny Notice & Prototype Disclaimer (SIH26130)
+              Statutory Scrutiny Notice & Regulatory Boundary Disclaimer
             </p>
             <p>
               This grievance scrutiny portal provides technical workflow tracking and internal case management.

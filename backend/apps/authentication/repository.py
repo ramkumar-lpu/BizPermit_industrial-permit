@@ -42,7 +42,7 @@ class UserRepository(BaseRepository):
                 "designation": None,
                 "badge_number": None
             },
-            "is_email_verified": True,  # Prototype default
+            "is_email_verified": True,  # Default active verification
             "is_phone_verified": True,
             "is_active": True,
             "last_login_at": None,
