@@ -9,10 +9,12 @@ services:
     # In production, do not expose MongoDB port publicly to host network
     ports: !reset []
     restart: always
+    stop_grace_period: 30s
 
   backend:
     restart: always
-    command: gunicorn bizpermit_core.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120
+    stop_grace_period: 30s
+    command: gunicorn bizpermit_core.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --graceful-timeout 30
     # Do not mount host directory in production
     volumes: !reset []
     # Backend port is internal only; clients reach it through Nginx reverse proxy

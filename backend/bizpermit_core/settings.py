@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'apps.common.middleware.RequestObservabilityMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -186,10 +187,18 @@ if not DEBUG and HTTPS_ENABLED:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
+# Observability & Performance Thresholds
+SLOW_REQUEST_THRESHOLD_MS = int(os.getenv('SLOW_REQUEST_THRESHOLD_MS', 500))
+
 # Structured Console Logging for Gunicorn / Docker stdout
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'redact_sensitive': {
+            '()': 'apps.common.middleware.SensitiveDataFilter',
+        },
+    },
     'formatters': {
         'standard': {
             'format': '[%(asctime)s] %(levelname)s %(name)s: %(message)s',
@@ -199,6 +208,7 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
+            'filters': ['redact_sensitive'],
         },
     },
     'loggers': {

@@ -2,8 +2,11 @@
 Custom exceptions and centralized DRF exception handler for BizPermit.
 """
 
+import logging
 from rest_framework import status
 from apps.common.responses import api_error_response
+
+error_logger = logging.getLogger('bizpermit.errors')
 
 class BizPermitException(Exception):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -105,6 +108,8 @@ def custom_exception_handler(exc, context):
         )
 
     # Unhandled exceptions
+    req_id = getattr(request, 'request_id', 'unknown') if request else 'unknown'
+    error_logger.exception(f"Unhandled exception request_id={req_id}: {type(exc).__name__}")
     return api_error_response(
         code="UNEXPECTED_SERVER_ERROR",
         message="A server error occurred. Please contact system administrator.",

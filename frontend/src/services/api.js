@@ -6,6 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -87,11 +88,28 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('bizpermit_refresh_token');
         localStorage.removeItem('bizpermit_user');
         clearAuthorizationHeader(apiClient.defaults.headers.common);
-        window.location.href = '/login';
+        window.dispatchEvent(new CustomEvent('bizpermit:session-expired'));
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login?reason=session_expired';
+        }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
+    }
+
+    if (!error.response) {
+      error.friendlyMessage =
+        error.code === 'ECONNABORTED'
+          ? 'The request timed out. Please check your connection and try again.'
+          : 'Unable to reach the BizPermit server. Please verify your network connection.';
+    } else if (error.response.status === 429) {
+      error.friendlyMessage = 'Too many requests. Please wait a moment before trying again.';
+    } else if (error.response.status >= 502) {
+      error.friendlyMessage = 'The service is temporarily unavailable. Please try again shortly.';
+    } else {
+      error.friendlyMessage =
+        error.response.data?.error?.message || error.message || 'An unexpected error occurred.';
     }
 
     return Promise.reject(error);

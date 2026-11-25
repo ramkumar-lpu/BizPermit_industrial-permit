@@ -151,12 +151,12 @@ def get_db():
 def check_connection_health() -> Dict[str, Any]:
     """
     Diagnostic tool to check current database status.
-    Returns safe status metrics without leaking credentials.
+    Returns safe status metrics without leaking credentials or raw connection strings.
     """
     global _client, _db, _is_replica_set, _using_mock
-    client = get_client()
 
     try:
+        client = get_client()
         if _using_mock:
             return {
                 "status": "connected",
@@ -174,11 +174,13 @@ def check_connection_health() -> Dict[str, Any]:
             "replica_set_transactions_supported": _is_replica_set,
             "notes": "Live MongoDB cluster active" if _is_replica_set else "Connected in standalone mode (no transactions)"
         }
-    except Exception as exc:
+    except Exception:
         return {
             "status": "disconnected",
-            "error": str(exc),
-            "replica_set_transactions_supported": False
+            "mode": "live_mongodb",
+            "database": getattr(settings, 'MONGODB_DB_NAME', 'bizpermit_db'),
+            "replica_set_transactions_supported": False,
+            "notes": "Database connectivity check failed"
         }
 
 def reset_mock_db_for_testing():
