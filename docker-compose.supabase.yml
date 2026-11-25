@@ -157,7 +157,11 @@ services:
       KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
-    entrypoint: bash -c 'eval "echo \"$$(cat ~/temp.yml)\"" > ~/kong.yml && /docker-entrypoint.sh kong docker-start'
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        sed -e "s|\$${SUPABASE_ANON_KEY}|$$SUPABASE_ANON_KEY|g" -e "s|\$${SUPABASE_SERVICE_ROLE_KEY}|$$SUPABASE_SERVICE_ROLE_KEY|g" /home/kong/temp.yml > /home/kong/kong.yml && exec /docker-entrypoint.sh kong docker-start
     volumes:
       - ./infra/supabase/kong.yml:/home/kong/temp.yml:ro
     healthcheck:
