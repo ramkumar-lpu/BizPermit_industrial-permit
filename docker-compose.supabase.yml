@@ -1,0 +1,206 @@
+# ==============================================================================
+# BIZPERMIT — OFFICIAL SELF-HOSTED SUPABASE INFRASTRUCTURE STACK
+# Usage:
+#   Development (includes Studio on 127.0.0.1:3001):
+#     docker compose -f docker-compose.supabase.yml --profile dev up -d
+#   Production-style (no Studio, internal Postgres/Auth/Storage):
+#     docker compose -f docker-compose.supabase.yml up -d
+# ==============================================================================
+
+services:
+  supabase-db:
+    image: supabase/postgres:15.8.1.044
+    container_name: bizpermit-supabase-db
+    restart: unless-stopped
+    stop_grace_period: 30s
+    command:
+      - postgres
+      - -c
+      - config_file=/etc/postgresql/postgresql.conf
+      - -c
+      - log_min_messages=fatal
+    environment:
+      POSTGRES_HOST: /var/run/postgresql
+      PGPORT: 5432
+      POSTGRES_PORT: 5432
+      PGPASSWORD: ${SUPABASE_POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${SUPABASE_POSTGRES_PASSWORD}
+      PGDATABASE: ${SUPABASE_POSTGRES_DB:-postgres}
+      POSTGRES_DB: ${SUPABASE_POSTGRES_DB:-postgres}
+      JWT_SECRET: ${SUPABASE_JWT_SECRET}
+      JWT_EXP: ${SUPABASE_JWT_EXPIRY:-3600}
+    volumes:
+      - supabase_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - bizpermit-network
+
+  supabase-auth:
+    image: supabase/gotrue:v2.167.0
+    container_name: bizpermit-supabase-auth
+    restart: unless-stopped
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      API_EXTERNAL_URL: ${SUPABASE_PUBLIC_URL:-http://127.0.0.1:8100}
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://supabase_auth_admin:${SUPABASE_POSTGRES_PASSWORD}@supabase-db:5432/${SUPABASE_POSTGRES_DB:-postgres}
+      GOTRUE_SITE_URL: ${FRONTEND_BASE_URL:-http://localhost:5173}
+      GOTRUE_DISABLE_SIGNUP: "false"
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${SUPABASE_JWT_EXPIRY:-3600}
+      GOTRUE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_MAILER_AUTOCONFIRM: ${SUPABASE_MAILER_AUTOCONFIRM:-true}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9999/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - bizpermit-network
+
+  supabase-rest:
+    image: postgrest/postgrest:v12.2.3
+    container_name: bizpermit-supabase-rest
+    restart: unless-stopped
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${SUPABASE_POSTGRES_PASSWORD}@supabase-db:5432/${SUPABASE_POSTGRES_DB:-postgres}
+      PGRST_DB_SCHEMAS: public,storage,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    networks:
+      - bizpermit-network
+
+  supabase-storage:
+    image: supabase/storage-api:v1.14.5
+    container_name: bizpermit-supabase-storage
+    restart: unless-stopped
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+      supabase-rest:
+        condition: service_started
+    environment:
+      ANON_KEY: ${SUPABASE_ANON_KEY}
+      SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      POSTGREST_URL: http://supabase-rest:3000
+      PGRST_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+      DATABASE_URL: postgres://supabase_storage_admin:${SUPABASE_POSTGRES_PASSWORD}@supabase-db:5432/${SUPABASE_POSTGRES_DB:-postgres}
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+      REGION: stub
+      GLOBAL_S3_BUCKET: stub
+      ENABLE_IMAGE_TRANSFORMATION: "false"
+    volumes:
+      - supabase_storage_data:/var/lib/storage
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5000/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - bizpermit-network
+
+  supabase-meta:
+    image: supabase/postgres-meta:v0.84.2
+    container_name: bizpermit-supabase-meta
+    restart: unless-stopped
+    depends_on:
+      supabase-db:
+        condition: service_healthy
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: supabase-db
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: ${SUPABASE_POSTGRES_DB:-postgres}
+      PG_META_DB_USER: supabase_admin
+      PG_META_DB_PASSWORD: ${SUPABASE_POSTGRES_PASSWORD}
+    networks:
+      - bizpermit-network
+
+  supabase-kong:
+    image: kong:2.8.1
+    container_name: bizpermit-supabase-kong
+    restart: unless-stopped
+    depends_on:
+      supabase-auth:
+        condition: service_healthy
+      supabase-storage:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${SUPABASE_KONG_PORT:-8100}:8000"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+    entrypoint: bash -c 'eval "echo \"$$(cat ~/temp.yml)\"" > ~/kong.yml && /docker-entrypoint.sh kong docker-start'
+    volumes:
+      - ./infra/supabase/kong.yml:/home/kong/temp.yml:ro
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - bizpermit-network
+
+  supabase-studio:
+    image: supabase/studio:20250113-83c9420
+    container_name: bizpermit-supabase-studio
+    profiles: ["dev"]
+    restart: unless-stopped
+    depends_on:
+      supabase-kong:
+        condition: service_healthy
+      supabase-meta:
+        condition: service_started
+    ports:
+      - "127.0.0.1:${SUPABASE_STUDIO_PORT:-3001}:3000"
+    environment:
+      STUDIO_PG_META_URL: http://supabase-meta:8080
+      POSTGRES_PASSWORD: ${SUPABASE_POSTGRES_PASSWORD}
+      DEFAULT_ORGANIZATION_NAME: BizPermit
+      DEFAULT_PROJECT_NAME: BizPermit Self-Hosted
+      SUPABASE_URL: http://supabase-kong:8000
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL:-http://127.0.0.1:8100}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      AUTH_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+    networks:
+      - bizpermit-network
+
+networks:
+  bizpermit-network:
+    name: bizpermit-network
+    driver: bridge
+
+volumes:
+  supabase_postgres_data:
+    name: bizpermit_supabase_postgres_data
+  supabase_storage_data:
+    name: bizpermit_supabase_storage_data
