@@ -314,6 +314,8 @@ class AdminUserStatusView(APIView):
             user_agent=request.META.get('HTTP_USER_AGENT')
         )
 
+        new_status = update_fields.get("is_active", user.get("is_active", True))
+
         from apps.common.workflow_engine import WorkflowEngine
         WorkflowEngine.publish_event(
             event_type="USER_STATUS_UPDATED",

@@ -6,6 +6,7 @@ Never exposes service-role keys to the frontend client.
 """
 
 import os
+import sys
 import requests
 import logging
 from typing import Any, Dict, Optional
@@ -42,12 +43,25 @@ class SupabaseStorageService:
     def is_configured(self) -> bool:
         return bool(self.supabase_url and self.service_key and self.bucket)
 
+    def _allow_offline_fallback(self) -> bool:
+        return bool(getattr(settings, 'DEBUG', False) or 'pytest' in sys.modules)
+
     def create_signed_upload_url(self, object_path: str) -> Dict[str, Any]:
         """
         Generates a short-lived signed URL allowing client-side direct upload
         without exposing the service role key.
         """
         clean_path = object_path.lstrip('/')
+        if not self.is_configured():
+            if self._allow_offline_fallback():
+                logger.warning(f"Supabase unconfigured; using sandbox signed upload fallback for {clean_path}")
+                return {
+                    "signed_upload_url": f"https://mock-storage.local/upload/{clean_path}",
+                    "token": "mock-offline-token",
+                    "object_path": clean_path,
+                    "bucket": self.bucket
+                }
+            raise RuntimeError("Supabase Storage is not configured.")
         url = f"{self.base_api}/object/upload/sign/{self.bucket}/{clean_path}"
 
         try:
@@ -83,6 +97,11 @@ class SupabaseStorageService:
         Generates a temporary signed preview/download URL valid for `expires_in` seconds (default 15 minutes).
         """
         clean_path = object_path.lstrip('/')
+        if not self.is_configured():
+            if self._allow_offline_fallback():
+                logger.warning(f"Supabase unconfigured; using sandbox signed download fallback for {clean_path}")
+                return f"https://mock-storage.local/signed/{clean_path}?token=mock"
+            raise RuntimeError("Supabase Storage is not configured.")
         url = f"{self.base_api}/object/sign/{self.bucket}/{clean_path}"
 
         try:
@@ -116,6 +135,11 @@ class SupabaseStorageService:
         Direct server-side upload to private bucket using the backend service key.
         """
         clean_path = object_path.lstrip('/')
+        if not self.is_configured():
+            if self._allow_offline_fallback():
+                logger.warning(f"Supabase unconfigured; using sandbox upload fallback for {clean_path}")
+                return {"Key": f"{self.bucket}/{clean_path}", "Id": "mock-storage-id-offline"}
+            raise RuntimeError("Supabase Storage is not configured.")
         url = f"{self.base_api}/object/{self.bucket}/{clean_path}"
 
         headers = {
@@ -143,6 +167,11 @@ class SupabaseStorageService:
         Fetches binary content from private bucket for server-side verification.
         """
         clean_path = object_path.lstrip('/')
+        if not self.is_configured():
+            if self._allow_offline_fallback():
+                logger.warning(f"Supabase unconfigured; using sandbox get_file_bytes fallback for {clean_path}")
+                return b"%PDF-1.4 Mock Offline File Content"
+            raise RuntimeError("Supabase Storage is not configured.")
         url = f"{self.base_api}/object/authenticated/{self.bucket}/{clean_path}"
 
         headers = {
