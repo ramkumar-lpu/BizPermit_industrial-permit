@@ -602,12 +602,13 @@ class AdminSchemeListCreateView(APIView):
         if authority_level:
             query["authority_level"] = authority_level.strip().upper()
         if search:
-            s = search.strip()
-            query["$or"] = [
-                {"name": {"$regex": s, "$options": "i"}},
-                {"scheme_code": {"$regex": s, "$options": "i"}},
-                {"short_name": {"$regex": s, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search)
+            if regex:
+                query["$or"] = [
+                    {"name": regex},
+                    {"scheme_code": regex},
+                    {"short_name": regex}
+                ]
 
         schemes = list(scheme_repo.collection.find(query).sort("created_at", -1))
         serialized = [BaseRepository.serialize_doc(s) for s in schemes]

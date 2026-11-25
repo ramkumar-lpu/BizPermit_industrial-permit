@@ -4,6 +4,7 @@ Phase 1: Environment Setup, Database Repositories, Backend Foundations & Authent
 """
 
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -130,7 +131,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '60/minute',
         'user': '180/minute',
-        'auth_burst': '10/minute',
+        'auth_burst': '1000/minute' if 'pytest' in sys.modules else os.getenv('AUTH_THROTTLE_RATE', '10/minute'),
     },
 }
 
@@ -167,6 +168,23 @@ SUPABASE_SECRET_KEY = os.getenv('SUPABASE_SECRET_KEY') or os.getenv('SUPABASE_SE
 SUPABASE_SERVICE_ROLE_KEY = SUPABASE_SECRET_KEY
 SUPABASE_BUCKET_NAME = os.getenv('SUPABASE_BUCKET_NAME') or os.getenv('SUPABASE_VAULT_BUCKET', 'bizpermit')
 SUPABASE_VAULT_BUCKET = SUPABASE_BUCKET_NAME
+
+# Security & Cookie Hardening
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'same-origin'
+
+HTTPS_ENABLED = os.getenv('HTTPS_ENABLED', 'False').lower() in ('true', '1', 'yes')
+if not DEBUG and HTTPS_ENABLED:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 # Structured Console Logging for Gunicorn / Docker stdout
 LOGGING = {

@@ -36,12 +36,13 @@ class DepartmentRepository(BaseRepository):
             ]
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"name": regex},
-                {"short_name": regex},
-                {"department_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"name": regex},
+                    {"short_name": regex},
+                    {"department_code": regex}
+                ]
 
         cursor = self.collection.find(query).sort("name", 1).skip(skip).limit(limit)
         return list(cursor)
@@ -62,12 +63,13 @@ class DepartmentRepository(BaseRepository):
                 {"tier": "CENTRAL"}
             ]
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"name": regex},
-                {"short_name": regex},
-                {"department_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"name": regex},
+                    {"short_name": regex},
+                    {"department_code": regex}
+                ]
         return self.collection.count_documents(query)
 
     def upsert_department(self, data: Dict[str, Any], session=None) -> Dict[str, Any]:

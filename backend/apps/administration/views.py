@@ -177,11 +177,13 @@ class AdminUserListView(APIView):
                 query["is_active"] = False
 
         if search_query:
-            query["$or"] = [
-                {"email": {"$regex": search_query, "$options": "i"}},
-                {"full_name": {"$regex": search_query, "$options": "i"}},
-                {"phone_number": {"$regex": search_query, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"email": regex},
+                    {"full_name": regex},
+                    {"phone_number": regex}
+                ]
 
         try:
             page = max(1, int(request.query_params.get('page', 1)))
@@ -352,11 +354,13 @@ class AdminOfficerListCreateView(APIView):
         if state_filter:
             query["officer_profile.jurisdiction_code"] = state_filter
         if search_query:
-            query["$or"] = [
-                {"email": {"$regex": search_query, "$options": "i"}},
-                {"full_name": {"$regex": search_query, "$options": "i"}},
-                {"officer_profile.badge_number": {"$regex": search_query, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"email": regex},
+                    {"full_name": regex},
+                    {"officer_profile.badge_number": regex}
+                ]
 
         try:
             page = max(1, int(request.query_params.get('page', 1)))
@@ -624,10 +628,12 @@ class AdminJurisdictionListCreateView(APIView):
         if parent_code:
             query["parent_code"] = parent_code.upper()
         if search_query:
-            query["$or"] = [
-                {"name": {"$regex": search_query, "$options": "i"}},
-                {"code": {"$regex": search_query, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"name": regex},
+                    {"code": regex}
+                ]
 
         jurisdictions = list(db.jurisdictions.find(query).sort("name", 1))
         serialized = [BaseRepository.serialize_doc(j) for j in jurisdictions]
@@ -773,12 +779,14 @@ class AdminApplicationMonitoringView(APIView):
         if status:
             query["status"] = status
         if search_query:
-            query["$or"] = [
-                {"application_number": {"$regex": search_query, "$options": "i"}},
-                {"approval_name": {"$regex": search_query, "$options": "i"}},
-                {"applicant_form_data.plant_name": {"$regex": search_query, "$options": "i"}},
-                {"applicant_form_data.legal_name": {"$regex": search_query, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"application_number": regex},
+                    {"approval_name": regex},
+                    {"applicant_form_data.plant_name": regex},
+                    {"applicant_form_data.legal_name": regex}
+                ]
 
         try:
             page = max(1, int(request.query_params.get('page', 1)))
@@ -845,11 +853,13 @@ class AdminAuditLogListView(APIView):
         if action:
             query["action"] = action
         if search_query:
-            query["$or"] = [
-                {"action": {"$regex": search_query, "$options": "i"}},
-                {"target_collection": {"$regex": search_query, "$options": "i"}},
-                {"target_id": {"$regex": search_query, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"action": regex},
+                    {"target_collection": regex},
+                    {"target_id": regex}
+                ]
 
         try:
             page = max(1, int(request.query_params.get('page', 1)))
@@ -1001,12 +1011,14 @@ class AdminPlatformEventListView(APIView):
             query["actor_role"] = actor_role.strip().upper()
 
         if search_query:
-            query["$or"] = [
-                {"event_type": {"$regex": search_query, "$options": "i"}},
-                {"title": {"$regex": search_query, "$options": "i"}},
-                {"message": {"$regex": search_query, "$options": "i"}},
-                {"target_collection": {"$regex": search_query, "$options": "i"}}
-            ]
+            regex = BaseRepository.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"event_type": regex},
+                    {"title": regex},
+                    {"message": regex},
+                    {"target_collection": regex}
+                ]
 
         try:
             page = max(1, int(request.query_params.get('page', 1)))

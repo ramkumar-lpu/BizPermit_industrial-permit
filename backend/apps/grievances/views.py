@@ -738,11 +738,13 @@ class AdminGrievanceOversightView(APIView):
         filter_query = {}
         search = request.query_params.get("search")
         if search:
-            filter_query["$or"] = [
-                {"grievance_id": {"$regex": search, "$options": "i"}},
-                {"title": {"$regex": search, "$options": "i"}},
-                {"category_code": {"$regex": search, "$options": "i"}},
-            ]
+            regex = BaseRepository.safe_regex(search)
+            if regex:
+                filter_query["$or"] = [
+                    {"grievance_id": regex},
+                    {"title": regex},
+                    {"category_code": regex},
+                ]
         if request.query_params.get("status"):
             filter_query["status"] = request.query_params.get("status")
         if request.query_params.get("priority"):

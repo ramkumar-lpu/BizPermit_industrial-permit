@@ -143,8 +143,9 @@ class DocumentListView(APIView):
             if status_filter:
                 query["verification_status"] = status_filter.strip().upper()
             if search_query:
-                regex = {"$regex": search_query.strip(), "$options": "i"}
-                query["$and"] = [{"$or": query.pop("$or")}, {"$or": [{"document_name": regex}, {"original_filename": regex}]}]
+                regex = BaseRepository.safe_regex(search_query)
+                if regex:
+                    query["$and"] = [{"$or": query.pop("$or")}, {"$or": [{"document_name": regex}, {"original_filename": regex}]}]
 
             cursor = doc_repo.collection.find(query).sort("created_at", -1).skip(skip).limit(page_size)
             docs = list(cursor)
@@ -159,8 +160,9 @@ class DocumentListView(APIView):
             if status_filter:
                 query["verification_status"] = status_filter.strip().upper()
             if search_query:
-                regex = {"$regex": search_query.strip(), "$options": "i"}
-                query["$or"] = [{"document_name": regex}, {"original_filename": regex}]
+                regex = BaseRepository.safe_regex(search_query)
+                if regex:
+                    query["$or"] = [{"document_name": regex}, {"original_filename": regex}]
 
             cursor = doc_repo.collection.find(query).sort("created_at", -1).skip(skip).limit(page_size)
             docs = list(cursor)
@@ -197,8 +199,9 @@ class DocumentListView(APIView):
                 if category:
                     query["document_category"] = category.strip().upper()
                 if search_query:
-                    regex = {"$regex": search_query.strip(), "$options": "i"}
-                    query["$or"] = [{"document_name": regex}, {"original_filename": regex}]
+                    regex = BaseRepository.safe_regex(search_query)
+                    if regex:
+                        query["$or"] = [{"document_name": regex}, {"original_filename": regex}]
 
                 cursor = doc_repo.collection.find(query).sort("created_at", -1).skip(skip).limit(page_size)
                 docs = list(cursor)
@@ -277,7 +280,17 @@ class ConfirmUploadView(APIView):
         if not biz:
             raise PermissionDeniedException("Unauthorized access to business vault.")
 
-        object_path = data["storage_object_path"]
+        object_path = (data["storage_object_path"] or "").strip()
+        expected_prefix = f"businesses/{business_id}/docs/"
+        if (
+            ".." in object_path
+            or "\\" in object_path
+            or not object_path.startswith(expected_prefix)
+            or len(object_path) <= len(expected_prefix)
+        ):
+            raise PermissionDeniedException(
+                "Invalid or unauthorized storage object path for this business."
+            )
 
         # Fetch bytes from Supabase private storage to verify upload and content
         try:

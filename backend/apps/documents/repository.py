@@ -119,11 +119,12 @@ class DocumentRepository(BaseRepository):
                 query["location_id"] = l_oid
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"document_name": regex},
-                {"original_filename": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"document_name": regex},
+                    {"original_filename": regex}
+                ]
 
         cursor = self.collection.find(query).sort("created_at", -1).skip(skip).limit(limit)
         return list(cursor)
@@ -159,11 +160,12 @@ class DocumentRepository(BaseRepository):
                 query["location_id"] = l_oid
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"document_name": regex},
-                {"original_filename": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"document_name": regex},
+                    {"original_filename": regex}
+                ]
 
         return self.collection.count_documents(query)
 

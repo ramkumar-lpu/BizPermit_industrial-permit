@@ -50,18 +50,19 @@ class ApprovalCatalogueRepository(BaseRepository):
             query["verification_status"] = verification_status.strip().upper()
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            search_cond = [
-                {"title": regex},
-                {"short_name": regex},
-                {"approval_code": regex},
-                {"statutory_act": regex},
-                {"department_code": regex}
-            ]
-            if "$or" in query:
-                query["$and"] = [{"$or": query.pop("$or")}, {"$or": search_cond}]
-            else:
-                query["$or"] = search_cond
+            regex = self.safe_regex(search_query)
+            if regex:
+                search_cond = [
+                    {"title": regex},
+                    {"short_name": regex},
+                    {"approval_code": regex},
+                    {"statutory_act": regex},
+                    {"department_code": regex}
+                ]
+                if "$or" in query:
+                    query["$and"] = [{"$or": query.pop("$or")}, {"$or": search_cond}]
+                else:
+                    query["$or"] = search_cond
 
         cursor = self.collection.find(query).sort("approval_code", 1).skip(skip).limit(limit)
         return list(cursor)
@@ -95,18 +96,19 @@ class ApprovalCatalogueRepository(BaseRepository):
         if verification_status:
             query["verification_status"] = verification_status.strip().upper()
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            search_cond = [
-                {"title": regex},
-                {"short_name": regex},
-                {"approval_code": regex},
-                {"statutory_act": regex},
-                {"department_code": regex}
-            ]
-            if "$or" in query:
-                query["$and"] = [{"$or": query.pop("$or")}, {"$or": search_cond}]
-            else:
-                query["$or"] = search_cond
+            regex = self.safe_regex(search_query)
+            if regex:
+                search_cond = [
+                    {"title": regex},
+                    {"short_name": regex},
+                    {"approval_code": regex},
+                    {"statutory_act": regex},
+                    {"department_code": regex}
+                ]
+                if "$or" in query:
+                    query["$and"] = [{"$or": query.pop("$or")}, {"$or": search_cond}]
+                else:
+                    query["$or"] = search_cond
 
         return self.collection.count_documents(query)
 

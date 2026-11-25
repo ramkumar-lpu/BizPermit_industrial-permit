@@ -218,13 +218,14 @@ class ApplicationRepository(BaseRepository):
             query["status"] = status.strip().upper()
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"application_number": regex},
-                {"approval_title": regex},
-                {"approval_code": regex},
-                {"department_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"application_number": regex},
+                    {"approval_title": regex},
+                    {"approval_code": regex},
+                    {"department_code": regex}
+                ]
 
         cursor = self.collection.find(query).sort("updated_at", -1).skip(skip).limit(limit)
         return list(cursor)
@@ -259,13 +260,14 @@ class ApplicationRepository(BaseRepository):
             query["status"] = status.strip().upper()
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"application_number": regex},
-                {"approval_title": regex},
-                {"approval_code": regex},
-                {"department_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"application_number": regex},
+                    {"approval_title": regex},
+                    {"approval_code": regex},
+                    {"department_code": regex}
+                ]
 
         return self.collection.count_documents(query)
 
@@ -595,16 +597,17 @@ class ApplicationRepository(BaseRepository):
             ]
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            search_clause = [
-                {"application_number": regex},
-                {"approval_title": regex},
-                {"approval_code": regex}
-            ]
-            if "$or" in query:
-                query = {"$and": [{"$or": query.pop("$or")}, {"$or": search_clause}], **query}
-            else:
-                query["$or"] = search_clause
+            regex = self.safe_regex(search_query)
+            if regex:
+                search_clause = [
+                    {"application_number": regex},
+                    {"approval_title": regex},
+                    {"approval_code": regex}
+                ]
+                if "$or" in query:
+                    query = {"$and": [{"$or": query.pop("$or")}, {"$or": search_clause}], **query}
+                else:
+                    query["$or"] = search_clause
 
         cursor = self.collection.find(query).sort("submitted_at", -1).skip(skip).limit(limit)
         return list(cursor)
@@ -647,16 +650,17 @@ class ApplicationRepository(BaseRepository):
             ]
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            search_clause = [
-                {"application_number": regex},
-                {"approval_title": regex},
-                {"approval_code": regex}
-            ]
-            if "$or" in query:
-                query = {"$and": [{"$or": query.pop("$or")}, {"$or": search_clause}], **query}
-            else:
-                query["$or"] = search_clause
+            regex = self.safe_regex(search_query)
+            if regex:
+                search_clause = [
+                    {"application_number": regex},
+                    {"approval_title": regex},
+                    {"approval_code": regex}
+                ]
+                if "$or" in query:
+                    query = {"$and": [{"$or": query.pop("$or")}, {"$or": search_clause}], **query}
+                else:
+                    query["$or"] = search_clause
 
         return self.collection.count_documents(query)
 

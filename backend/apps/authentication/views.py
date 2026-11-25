@@ -23,7 +23,7 @@ from apps.authentication.jwt_service import (
 )
 
 class AuthBurstRateThrottle(AnonRateThrottle):
-    rate = '60/minute'
+    scope = 'auth_burst'
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -107,13 +107,13 @@ class ForgotPasswordView(APIView):
             action='PASSWORD_RESET_REQUESTED',
             target_collection='users',
             target_id=None,
-            delta={"email": serializer.validated_data['email'], "reset_sent": result.get('reset_sent', False)},
+            delta={"email": serializer.validated_data['email']},
             ip_address=request.META.get('REMOTE_ADDR'),
             user_agent=request.META.get('HTTP_USER_AGENT'),
         )
 
         return api_success_response(
-            data={"reset_sent": result.get('reset_sent', False), "email": serializer.validated_data['email']},
+            data={"reset_requested": True, "email": serializer.validated_data['email']},
             message="If an account exists for this email, password reset instructions have been sent.",
             request=request,
         )
@@ -147,6 +147,7 @@ class ResetPasswordView(APIView):
 
 class TokenRefreshView(APIView):
     permission_classes = [AllowAny]
+    throttle_classes = [AuthBurstRateThrottle]
 
     def post(self, request):
         serializer = TokenRefreshSerializer(data=request.data)

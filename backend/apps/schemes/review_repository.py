@@ -294,11 +294,12 @@ class SchemeReviewRepository(BaseRepository):
 
         # 5. Search query
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"application_reference": regex},
-                {"scheme_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"application_reference": regex},
+                    {"scheme_code": regex}
+                ]
 
         now = datetime.now(timezone.utc)
         total_count = self.collection.count_documents(query)

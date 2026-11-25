@@ -165,14 +165,15 @@ class ComplianceObligationRepository(BaseRepository):
             query["due_date"] = date_query
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"title": regex},
-                {"obligation_number": regex},
-                {"description": regex},
-                {"department_code": regex},
-                {"approval_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"title": regex},
+                    {"obligation_number": regex},
+                    {"description": regex},
+                    {"department_code": regex},
+                    {"approval_code": regex}
+                ]
 
         cursor = self.collection.find(query).sort("due_date", 1).skip(skip).limit(limit)
         return list(cursor)
@@ -222,14 +223,15 @@ class ComplianceObligationRepository(BaseRepository):
             query["due_date"] = date_query
 
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"title": regex},
-                {"obligation_number": regex},
-                {"description": regex},
-                {"department_code": regex},
-                {"approval_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"title": regex},
+                    {"obligation_number": regex},
+                    {"description": regex},
+                    {"department_code": regex},
+                    {"approval_code": regex}
+                ]
 
         return self.collection.count_documents(query)
 
@@ -405,13 +407,14 @@ class ComplianceObligationRepository(BaseRepository):
         if status:
             query["status"] = status.strip().upper()
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"title": regex},
-                {"obligation_number": regex},
-                {"description": regex},
-                {"department_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"title": regex},
+                    {"obligation_number": regex},
+                    {"description": regex},
+                    {"department_code": regex}
+                ]
         cursor = self.collection.find(query).sort("due_date", 1).skip(skip).limit(limit)
         return list(cursor)
 
@@ -430,13 +433,14 @@ class ComplianceObligationRepository(BaseRepository):
         if status:
             query["status"] = status.strip().upper()
         if search_query:
-            regex = {"$regex": search_query.strip(), "$options": "i"}
-            query["$or"] = [
-                {"title": regex},
-                {"obligation_number": regex},
-                {"description": regex},
-                {"department_code": regex}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"title": regex},
+                    {"obligation_number": regex},
+                    {"description": regex},
+                    {"department_code": regex}
+                ]
         return self.collection.count_documents(query)
 
 

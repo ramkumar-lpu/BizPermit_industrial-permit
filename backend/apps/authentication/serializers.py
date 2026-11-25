@@ -89,7 +89,7 @@ class LoginSerializer(serializers.Serializer):
         }
 
         user = user_repo.find_by_email(email)
-        if not user and (email in demo_emails or user_repo.collection.count_documents({}) == 0):
+        if not user and getattr(settings, 'AUTO_SEED_DEMO_DATA', False) and (email in demo_emails or user_repo.collection.count_documents({}) == 0):
             try:
                 from django.core.management import call_command
                 call_command('seed_demo_data')
@@ -104,9 +104,6 @@ class LoginSerializer(serializers.Serializer):
         is_valid_pw = False
         if user:
             is_valid_pw = verify_password(password, user.get('password_hash', ''))
-            # Permissive demo credentials fallback for standard demo users
-            if not is_valid_pw and email in demo_emails and password.strip().lower() in ("password123", "password123!", "securepass123!"):
-                is_valid_pw = True
 
         if not user or not is_valid_pw:
             raise AuthenticationFailedException("Invalid email or password.")
@@ -159,7 +156,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
             # Intentionally swallow delivery issues so the API remains safe and consistent.
             pass
 
-        return {"email": email, "reset_sent": True, "reset_url": reset_url}
+        return {"email": email, "reset_sent": True}
 
 
 class ResetPasswordSerializer(serializers.Serializer):

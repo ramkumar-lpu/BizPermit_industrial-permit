@@ -60,20 +60,21 @@ class SchemeRepository(BaseRepository):
             query["fresh_intake_status"] = fresh_intake_status.strip().upper()
 
         if search:
-            s = search.strip()
-            search_clause = {
-                "$or": [
-                    {"name": {"$regex": s, "$options": "i"}},
-                    {"short_name": {"$regex": s, "$options": "i"}},
-                    {"scheme_code": {"$regex": s, "$options": "i"}},
-                    {"description": {"$regex": s, "$options": "i"}},
-                    {"department_code": {"$regex": s, "$options": "i"}}
-                ]
-            }
-            if "$or" in query:
-                query = {"$and": [query, search_clause]}
-            else:
-                query.update(search_clause)
+            regex = self.safe_regex(search)
+            if regex:
+                search_clause = {
+                    "$or": [
+                        {"name": regex},
+                        {"short_name": regex},
+                        {"scheme_code": regex},
+                        {"description": regex},
+                        {"department_code": regex}
+                    ]
+                }
+                if "$or" in query:
+                    query = {"$and": [query, search_clause]}
+                else:
+                    query.update(search_clause)
 
         return list(self.collection.find(query).sort("scheme_code", 1).skip(skip).limit(limit))
 

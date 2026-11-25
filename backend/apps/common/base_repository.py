@@ -3,6 +3,7 @@ PyMongo Base Repository Pattern.
 Provides robust BSON mapping, timestamps, ObjectId conversion and session support.
 """
 
+import re
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 from bson import ObjectId
@@ -28,6 +29,16 @@ class BaseRepository:
 
     def get_collection(self, collection_name: str):
         return get_db()[collection_name]
+
+    @staticmethod
+    def safe_regex(search_query: Optional[str], max_len: int = 100) -> Optional[Dict[str, str]]:
+        """Escapes user-supplied search strings to prevent MongoDB ReDoS and regex injection."""
+        if not search_query or not isinstance(search_query, str):
+            return None
+        cleaned = search_query.strip()[:max_len]
+        if not cleaned:
+            return None
+        return {"$regex": re.escape(cleaned), "$options": "i"}
 
     @staticmethod
     def to_object_id(id_val: Union[str, ObjectId]) -> Optional[ObjectId]:

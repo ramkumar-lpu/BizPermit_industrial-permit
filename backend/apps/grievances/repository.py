@@ -694,12 +694,13 @@ class GrievanceRepository(BaseRepository):
         if priority_filter:
             query["priority"] = priority_filter.strip().upper()
         if search_query:
-            sq = search_query.strip()
-            query["$or"] = [
-                {"grievance_reference": {"$regex": sq, "$options": "i"}},
-                {"subject": {"$regex": sq, "$options": "i"}},
-                {"category_code": {"$regex": sq, "$options": "i"}}
-            ]
+            regex = self.safe_regex(search_query)
+            if regex:
+                query["$or"] = [
+                    {"grievance_reference": regex},
+                    {"subject": regex},
+                    {"category_code": regex}
+                ]
 
         total = self.collection.count_documents(query)
         cursor = self.collection.find(query).sort("created_at", -1).skip(skip).limit(limit)
