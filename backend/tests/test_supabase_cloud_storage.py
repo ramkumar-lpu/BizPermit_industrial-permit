@@ -42,7 +42,18 @@ def test_01_storage_service_configuration(storage):
     assert storage.service_key.startswith("sb_secret_") or len(storage.service_key) >= 30
 
 
-def test_02_live_upload_to_private_bucket(storage, test_blob_path):
+def test_02_bucket_privacy_configuration(storage):
+    """
+    Directly queries the Supabase Storage bucket management API to verify
+    that the bucket is defined as private at the platform level.
+    """
+    bucket_info = storage.get_bucket_details()
+    assert bucket_info is not None, "Bucket details must be retrievable via management API."
+    assert bucket_info.get("id") == "bizpermit" or bucket_info.get("name") == "bizpermit"
+    assert bucket_info.get("public") is False, "Storage bucket must be PRIVATE (public=false)!"
+
+
+def test_03_live_upload_to_private_bucket(storage, test_blob_path):
     """Uploads a test binary object to the private bizpermit bucket."""
     test_content = b"%PDF-1.4 Live Cloud Storage Test Payload\nBizPermit Enterprise Vault"
     res = storage.upload_file_bytes(
@@ -55,7 +66,7 @@ def test_02_live_upload_to_private_bucket(storage, test_blob_path):
     assert "Key" in res or "id" in res or "Id" in res
 
 
-def test_03_retrieve_document_metadata(storage, test_blob_path):
+def test_04_retrieve_document_metadata(storage, test_blob_path):
     """Retrieves metadata for the uploaded object from the private bucket."""
     metadata = storage.get_object_metadata(test_blob_path)
     assert metadata is not None, "Metadata must be retrievable for an existing object."
@@ -66,7 +77,7 @@ def test_03_retrieve_document_metadata(storage, test_blob_path):
     assert meta_info.get("size", 0) > 0
 
 
-def test_04_signed_download_url_and_unauthenticated_fetch(storage, test_blob_path):
+def test_05_signed_download_url_and_unauthenticated_fetch(storage, test_blob_path):
     """Generates a signed download URL and verifies client-side retrieval without auth headers."""
     signed_url = storage.create_signed_download_url(test_blob_path, expires_in=900)
     assert signed_url.startswith("http")
@@ -78,22 +89,37 @@ def test_04_signed_download_url_and_unauthenticated_fetch(storage, test_blob_pat
     assert b"BizPermit Enterprise Vault" in res.content
 
 
-def test_05_authenticated_get_file_bytes(storage, test_blob_path):
+def test_06_authenticated_get_file_bytes(storage, test_blob_path):
     """Verifies server-side authenticated byte retrieval for inspection."""
     content = storage.get_file_bytes(test_blob_path)
     assert isinstance(content, bytes)
     assert b"Live Cloud Storage Test Payload" in content
 
 
-def test_06_unauthorized_direct_access_to_private_bucket(storage, test_blob_path):
-    """Verifies that direct unauthenticated requests to the private bucket are blocked."""
-    direct_url = f"{storage.base_api}/object/{storage.bucket}/{test_blob_path}"
-    res = storage._session.get(direct_url, timeout=10)
-    # Supabase returns 400 (Missing Authorization) or 401/403/404 for unauthenticated requests to private buckets
-    assert res.status_code in (400, 401, 403, 404)
+def test_07_unauthorized_direct_access_to_private_bucket(storage, test_blob_path):
+    """
+    Conclusively verifies that direct unauthenticated access to the private bucket is denied
+    across both public and authenticated endpoints:
+    1. /object/public/{bucket}/{path} -> Denied because bucket is private.
+    2. /object/authenticated/{bucket}/{path} -> Denied because required authorization header is missing.
+    3. Content bytes are never exposed to unauthenticated callers.
+    """
+    clean_path = test_blob_path.lstrip('/')
+
+    # Check 1: Public endpoint
+    public_url = f"{storage.base_api}/object/public/{storage.bucket}/{clean_path}"
+    res_pub = storage._session.get(public_url, timeout=10)
+    assert res_pub.status_code in (400, 401, 403, 404)
+    assert b"BizPermit Enterprise Vault" not in res_pub.content
+
+    # Check 2: Authenticated endpoint without auth headers
+    auth_url = f"{storage.base_api}/object/authenticated/{storage.bucket}/{clean_path}"
+    res_auth = storage._session.get(auth_url, timeout=10)
+    assert res_auth.status_code in (400, 401, 403)
+    assert b"BizPermit Enterprise Vault" not in res_auth.content
 
 
-def test_07_signed_upload_url_generation(storage):
+def test_08_signed_upload_url_generation(storage):
     """Verifies generation of short-lived signed upload URLs for direct client uploads."""
     random_id = uuid.uuid4().hex[:8]
     upload_path = f"{TEST_PREFIX}/client_upload_{random_id}.pdf"
@@ -106,7 +132,7 @@ def test_07_signed_upload_url_generation(storage):
     assert session_data["signed_upload_url"].startswith("http")
 
 
-def test_08_missing_file_handling(storage):
+def test_09_missing_file_handling(storage):
     """Verifies that missing files are handled gracefully without application crashes."""
     missing_path = f"{TEST_PREFIX}/non_existent_{uuid.uuid4().hex}.pdf"
     with pytest.raises(Exception):
@@ -116,7 +142,7 @@ def test_08_missing_file_handling(storage):
     assert meta is None
 
 
-def test_09_document_deletion_and_cleanup(storage, test_blob_path):
+def test_10_document_deletion_and_cleanup(storage, test_blob_path):
     """Deletes the test object and confirms it is no longer retrievable."""
     deleted = storage.delete_object(test_blob_path)
     assert deleted is True
@@ -126,7 +152,7 @@ def test_09_document_deletion_and_cleanup(storage, test_blob_path):
         storage.get_file_bytes(test_blob_path)
 
 
-def test_10_cross_business_vault_access_defense():
+def test_11_cross_business_vault_access_defense():
     """
     Ensures that business-level RBAC prevents unauthorized cross-tenant document access
     even when Supabase Storage is connected.

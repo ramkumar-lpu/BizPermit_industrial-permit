@@ -20,57 +20,67 @@ def test_password_reset_flow(client):
     email = "reset.user@horizonauto.in"
     password = "SecurePassword123"
 
-    reg_res = client.post(
-        "/api/v1/auth/register",
-        {
-            "email": email,
-            "password": password,
-            "full_name": "Reset Test User",
-            "phone_number": "+919876543299",
-        },
-        format="json",
-    )
-    assert reg_res.status_code == 201
+    # Ensure clean state independent of pre-existing database records
+    user_repo = UserRepository()
+    token_repo = PasswordResetTokenRepository()
+    user_repo.collection.delete_many({"email": email})
+    token_repo.collection.delete_many({"email": email})
 
-    forgot_res = client.post(
-        "/api/v1/auth/forgot-password",
-        {"email": email},
-        format="json",
-    )
-    assert forgot_res.status_code == 200
-    assert forgot_res.json()["success"] is True
+    try:
+        reg_res = client.post(
+            "/api/v1/auth/register",
+            {
+                "email": email,
+                "password": password,
+                "full_name": "Reset Test User",
+                "phone_number": "+919876543299",
+            },
+            format="json",
+        )
+        assert reg_res.status_code == 201
 
-    reset_doc = PasswordResetTokenRepository().collection.find_one({"email": email})
-    assert reset_doc is not None
-    assert reset_doc["is_used"] is False
+        forgot_res = client.post(
+            "/api/v1/auth/forgot-password",
+            {"email": email},
+            format="json",
+        )
+        assert forgot_res.status_code == 200
+        assert forgot_res.json()["success"] is True
 
-    new_password = "NewPassword456"
-    reset_res = client.post(
-        "/api/v1/auth/reset-password",
-        {
-            "token": reset_doc["token"],
-            "password": new_password,
-            "confirm_password": new_password,
-        },
-        format="json",
-    )
-    assert reset_res.status_code == 200
-    assert reset_res.json()["success"] is True
+        reset_doc = token_repo.collection.find_one({"email": email, "is_used": False}, sort=[("created_at", -1)])
+        assert reset_doc is not None
+        assert reset_doc["is_used"] is False
 
-    old_login_res = client.post(
-        "/api/v1/auth/login",
-        {"email": email, "password": password},
-        format="json",
-    )
-    assert old_login_res.status_code == 401
+        new_password = "NewPassword456"
+        reset_res = client.post(
+            "/api/v1/auth/reset-password",
+            {
+                "token": reset_doc["token"],
+                "password": new_password,
+                "confirm_password": new_password,
+            },
+            format="json",
+        )
+        assert reset_res.status_code == 200
+        assert reset_res.json()["success"] is True
 
-    new_login_res = client.post(
-        "/api/v1/auth/login",
-        {"email": email, "password": new_password},
-        format="json",
-    )
-    assert new_login_res.status_code == 200
-    assert new_login_res.json()["data"]["user"]["email"] == email
+        old_login_res = client.post(
+            "/api/v1/auth/login",
+            {"email": email, "password": password},
+            format="json",
+        )
+        assert old_login_res.status_code == 401
+
+        new_login_res = client.post(
+            "/api/v1/auth/login",
+            {"email": email, "password": new_password},
+            format="json",
+        )
+        assert new_login_res.status_code == 200
+        assert new_login_res.json()["data"]["user"]["email"] == email
+    finally:
+        user_repo.collection.delete_many({"email": email})
+        token_repo.collection.delete_many({"email": email})
 
 
 def test_reset_password_invalid_token_is_rejected(client):

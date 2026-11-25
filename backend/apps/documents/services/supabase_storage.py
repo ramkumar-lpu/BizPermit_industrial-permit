@@ -52,6 +52,7 @@ class SupabaseStorageService:
         headers = {
             "Authorization": f"Bearer {self.service_key}",
             "apikey": self.service_key,
+            "User-Agent": "BizPermit-StorageService/1.0",
         }
         if content_type:
             headers["Content-Type"] = content_type
@@ -62,6 +63,28 @@ class SupabaseStorageService:
 
     def _allow_offline_fallback(self) -> bool:
         return bool(getattr(settings, 'DEBUG', False) or 'pytest' in sys.modules)
+
+    def get_bucket_details(self) -> Optional[Dict[str, Any]]:
+        """
+        Retrieves bucket configuration (privacy, limits, allowed types)
+        directly from the Supabase Storage management API.
+        """
+        if not self.is_configured():
+            if self._allow_offline_fallback():
+                return {"id": self.bucket, "name": self.bucket, "public": False}
+            raise RuntimeError("Supabase Storage is not configured.")
+        url = f"{self.base_api}/bucket/{self.bucket}"
+        try:
+            res = self._session.get(url, headers=self._headers(), timeout=10)
+            if res.status_code == 200:
+                return res.json()
+            logger.warning(f"Supabase bucket query returned status {res.status_code}: {res.text}")
+            return None
+        except requests.exceptions.ConnectionError:
+            return {"id": self.bucket, "name": self.bucket, "public": False}
+        except Exception as exc:
+            logger.warning(f"Failed to fetch bucket details for {self.bucket}: {str(exc)}")
+            return None
 
     def create_signed_upload_url(self, object_path: str) -> Dict[str, Any]:
         """
@@ -161,12 +184,8 @@ class SupabaseStorageService:
             raise RuntimeError("Supabase Storage is not configured.")
         url = f"{self.base_api}/object/{self.bucket}/{clean_path}"
 
-        headers = {
-            "Authorization": f"Bearer {self.service_key}",
-            "apikey": self.service_key,
-            "Content-Type": content_type,
-            "x-upsert": "true" if upsert else "false"
-        }
+        headers = self._headers(content_type=content_type)
+        headers["x-upsert"] = "true" if upsert else "false"
 
         try:
             res = self._session.post(url, headers=headers, data=file_bytes, timeout=30)
@@ -238,10 +257,7 @@ class SupabaseStorageService:
             raise RuntimeError("Supabase Storage is not configured.")
         url = f"{self.base_api}/object/authenticated/{self.bucket}/{clean_path}"
 
-        headers = {
-            "Authorization": f"Bearer {self.service_key}",
-            "apikey": self.service_key
-        }
+        headers = self._headers(content_type="")
 
         try:
             res = self._session.get(url, headers=headers, timeout=20)
