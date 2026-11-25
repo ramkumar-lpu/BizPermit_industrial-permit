@@ -47,7 +47,8 @@ services:
       - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL:-noreply@bizpermit.local}
       - SUPABASE_URL=${SUPABASE_URL:-}
       - SUPABASE_SECRET_KEY=${SUPABASE_SECRET_KEY:-}
-      - SUPABASE_BUCKET_NAME=${SUPABASE_BUCKET_NAME:-bizpermit}
+      - SUPABASE_BUCKET_NAME=${SUPABASE_BUCKET_NAME:-${SUPABASE_BUCKET:-bizpermit}}
+      - SUPABASE_BUCKET=${SUPABASE_BUCKET:-${SUPABASE_BUCKET_NAME:-bizpermit}}
     depends_on:
       mongo:
         condition: service_healthy

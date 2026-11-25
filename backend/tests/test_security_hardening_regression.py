@@ -8,6 +8,7 @@ from django.test import override_settings
 from rest_framework.test import APIClient
 from apps.authentication.password import hash_password
 from apps.authentication.repository import UserRepository
+from apps.businesses.repository import BusinessRepository
 from apps.common.base_repository import BaseRepository
 from apps.database.connection import reset_mock_db_for_testing
 
@@ -26,7 +27,9 @@ def api_client():
 
 def test_hardcoded_demo_password_backdoor_removed(api_client):
     """Demo accounts must reject hardcoded fallback passwords like password123."""
-    UserRepository().create_user(
+    repo = UserRepository()
+    repo.collection.delete_many({"email": "admin@bizpermit.gov.in"})
+    repo.create_user(
         email="admin@bizpermit.gov.in",
         password_hash=hash_password("RealStrongAdminPass!99"),
         full_name="Platform Admin",
@@ -52,13 +55,15 @@ def test_hardcoded_demo_password_backdoor_removed(api_client):
 @override_settings(AUTO_SEED_DEMO_DATA=False)
 def test_login_does_not_auto_seed_when_disabled(api_client):
     """Unauthenticated login must not trigger demo seeding when AUTO_SEED_DEMO_DATA is False."""
+    repo = UserRepository()
+    repo.collection.delete_many({"email": "admin@bizpermit.gov.in"})
     res = api_client.post(
         "/api/v1/auth/login",
         {"email": "admin@bizpermit.gov.in", "password": "Admin@12345"},
         format="json",
     )
     assert res.status_code == 401
-    assert UserRepository().find_by_email("admin@bizpermit.gov.in") is None
+    assert repo.find_by_email("admin@bizpermit.gov.in") is None
 
 
 def test_forgot_password_prevents_email_enumeration(api_client):
@@ -95,6 +100,8 @@ def test_forgot_password_prevents_email_enumeration(api_client):
 
 def test_confirm_upload_blocks_cross_tenant_path_and_traversal(api_client):
     """confirm-upload must reject storage_object_path outside the caller's business prefix or with traversal."""
+    UserRepository().collection.delete_many({"email": "owner.a@example.com"})
+    BusinessRepository().collection.delete_many({"pan": "ABCDE1234F"})
     reg_a = api_client.post(
         "/api/v1/auth/register",
         {
@@ -150,6 +157,7 @@ def test_safe_regex_escapes_metacharacters_and_bounds_length():
 
 def test_jwt_logout_revokes_access_and_refresh_tokens(api_client):
     """Logged-out access and refresh tokens must be rejected immediately."""
+    UserRepository().collection.delete_many({"email": "logout.user@example.com"})
     reg = api_client.post(
         "/api/v1/auth/register",
         {

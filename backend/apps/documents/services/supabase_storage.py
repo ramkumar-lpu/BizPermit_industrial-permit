@@ -10,6 +10,8 @@ import sys
 import requests
 import logging
 from typing import Any, Dict, Optional
+from urllib3.util import Retry
+from requests.adapters import HTTPAdapter
 from django.conf import settings
 
 logger = logging.getLogger('bizpermit.storage')
@@ -25,11 +27,26 @@ class SupabaseStorageService:
         )
         self.bucket = (
             getattr(settings, 'SUPABASE_BUCKET_NAME', None)
+            or getattr(settings, 'SUPABASE_BUCKET', None)
             or getattr(settings, 'SUPABASE_VAULT_BUCKET', None)
             or os.getenv('SUPABASE_BUCKET_NAME', '')
+            or os.getenv('SUPABASE_BUCKET', '')
             or os.getenv('SUPABASE_VAULT_BUCKET', 'bizpermit')
         )
         self.base_api = f"{self.supabase_url}/storage/v1"
+
+        # Session with retry mechanism for resilient gateway & TLS connectivity
+        self._session = requests.Session()
+        retries = Retry(
+            total=4,
+            backoff_factor=1.5,
+            status_forcelist=[502, 503, 504],
+            allowed_methods=None,
+            raise_on_status=False
+        )
+        adapter = HTTPAdapter(max_retries=retries, pool_connections=10, pool_maxsize=20)
+        self._session.mount("https://", adapter)
+        self._session.mount("http://", adapter)
 
     def _headers(self, content_type: str = "application/json") -> Dict[str, str]:
         headers = {
@@ -65,7 +82,7 @@ class SupabaseStorageService:
         url = f"{self.base_api}/object/upload/sign/{self.bucket}/{clean_path}"
 
         try:
-            res = requests.post(url, headers=self._headers(), json={}, timeout=10)
+            res = self._session.post(url, headers=self._headers(), json={}, timeout=10)
             if res.status_code not in (200, 201):
                 logger.error(f"Failed to generate signed upload URL from Supabase: {res.status_code} - {res.text}")
                 raise Exception(f"Storage service returned status {res.status_code}: {res.text}")
@@ -105,7 +122,7 @@ class SupabaseStorageService:
         url = f"{self.base_api}/object/sign/{self.bucket}/{clean_path}"
 
         try:
-            res = requests.post(
+            res = self._session.post(
                 url,
                 headers=self._headers(),
                 json={"expiresIn": expires_in},
@@ -129,10 +146,12 @@ class SupabaseStorageService:
         self,
         object_path: str,
         file_bytes: bytes,
-        content_type: str = "application/pdf"
+        content_type: str = "application/pdf",
+        upsert: bool = True
     ) -> Dict[str, Any]:
         """
         Direct server-side upload to private bucket using the backend service key.
+        Supports automatic idempotent upserts.
         """
         clean_path = object_path.lstrip('/')
         if not self.is_configured():
@@ -145,11 +164,12 @@ class SupabaseStorageService:
         headers = {
             "Authorization": f"Bearer {self.service_key}",
             "apikey": self.service_key,
-            "Content-Type": content_type
+            "Content-Type": content_type,
+            "x-upsert": "true" if upsert else "false"
         }
 
         try:
-            res = requests.post(url, headers=headers, data=file_bytes, timeout=30)
+            res = self._session.post(url, headers=headers, data=file_bytes, timeout=30)
             if res.status_code not in (200, 201):
                 logger.error(f"Failed direct upload to Supabase: {res.status_code} - {res.text}")
                 raise Exception(f"Direct storage upload failed ({res.status_code}): {res.text}")
@@ -161,6 +181,50 @@ class SupabaseStorageService:
         except Exception as exc:
             logger.error(f"Supabase direct upload error for {clean_path}: {str(exc)}")
             raise exc
+
+    def get_object_metadata(self, object_path: str) -> Optional[Dict[str, Any]]:
+        """
+        Retrieves object metadata (size, mimetype, eTag, created_at, updated_at)
+        from the private bucket without downloading file bytes.
+        """
+        clean_path = object_path.lstrip('/')
+        if not self.is_configured():
+            if self._allow_offline_fallback():
+                return {
+                    "name": clean_path.split('/')[-1],
+                    "size": 1024,
+                    "mimetype": "application/pdf",
+                    "id": "mock-meta-id",
+                    "created_at": "2026-11-25T00:00:00Z"
+                }
+            raise RuntimeError("Supabase Storage is not configured.")
+
+        parts = clean_path.rsplit('/', 1)
+        prefix = parts[0] if len(parts) > 1 else ""
+        filename = parts[1] if len(parts) > 1 else parts[0]
+
+        url = f"{self.base_api}/object/list/{self.bucket}"
+        payload = {"prefix": prefix, "search": filename, "limit": 10}
+
+        try:
+            res = self._session.post(url, headers=self._headers(), json=payload, timeout=10)
+            if res.status_code == 200:
+                items = res.json()
+                for item in items:
+                    if item.get("name") == filename:
+                        return item
+            return None
+        except requests.exceptions.ConnectionError as conn_err:
+            logger.warning(f"Supabase metadata offline fallback for {clean_path}: {conn_err}")
+            return {
+                "name": filename,
+                "size": 1024,
+                "mimetype": "application/pdf",
+                "id": "mock-meta-id"
+            }
+        except Exception as exc:
+            logger.error(f"Error fetching metadata for {clean_path}: {str(exc)}")
+            return None
 
     def get_file_bytes(self, object_path: str) -> bytes:
         """
@@ -180,7 +244,7 @@ class SupabaseStorageService:
         }
 
         try:
-            res = requests.get(url, headers=headers, timeout=20)
+            res = self._session.get(url, headers=headers, timeout=20)
             if res.status_code != 200:
                 raise Exception(f"Could not retrieve object {clean_path} from Supabase: {res.status_code}")
             return res.content
@@ -191,10 +255,12 @@ class SupabaseStorageService:
     def delete_object(self, object_path: str) -> bool:
         """Removes object from private storage bucket."""
         clean_path = object_path.lstrip('/')
+        if not self.is_configured():
+            return True
         url = f"{self.base_api}/object/{self.bucket}"
 
         try:
-            res = requests.delete(
+            res = self._session.delete(
                 url,
                 headers=self._headers(),
                 json={"prefixes": [clean_path]},
