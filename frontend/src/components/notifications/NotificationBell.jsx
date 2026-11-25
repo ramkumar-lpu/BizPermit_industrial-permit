@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Bell, CheckCheck, Clock, ExternalLink, ShieldAlert, CheckCircle2, MessageSquare, AlertTriangle } from 'lucide-react';
 import { notificationAPI } from '../../services/api';
 
@@ -8,7 +8,7 @@ export const NotificationBell = () => {
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
 
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       setLoading(true);
       const res = await notificationAPI.list({ limit: 15 });
@@ -20,13 +20,26 @@ export const NotificationBell = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // 30s polling
-    return () => clearInterval(interval);
-  }, []);
+    const interval = setInterval(() => {
+      if (!document.hidden) {
+        fetchNotifications();
+      }
+    }, 30000); // Pause polling while tab is backgrounded
+    const handleVisibility = () => {
+      if (!document.hidden) {
+        fetchNotifications();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [fetchNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

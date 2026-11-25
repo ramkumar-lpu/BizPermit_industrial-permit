@@ -72,6 +72,26 @@ class BaseRepository:
         doc = self.collection.find_one({"_id": oid})
         return doc
 
+    def find_by_ids(
+        self,
+        id_vals: List[Union[str, ObjectId]],
+        projection: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Dict[str, Any]]:
+        """Batch-fetches documents by IDs using a single $in query and returns a str(id) -> doc map."""
+        oids = []
+        seen = set()
+        for val in id_vals or []:
+            if not val:
+                continue
+            oid = self.to_object_id(val)
+            if oid and oid not in seen:
+                seen.add(oid)
+                oids.append(oid)
+        if not oids:
+            return {}
+        cursor = self.collection.find({"_id": {"$in": oids}}, projection)
+        return {str(doc["_id"]): doc for doc in cursor}
+
     def find_one(self, filter_query: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return self.collection.find_one(filter_query)
 

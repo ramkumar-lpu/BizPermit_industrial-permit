@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { authAPI } from '../services/api';
 
 const AuthContext = createContext(null);
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     verifySession();
   }, []);
 
-  const login = async (email, password) => {
+  const login = useCallback(async (email, password) => {
     const response = await authAPI.login({ email, password });
     if (response.data?.success) {
       const { user: userData, tokens } = response.data.data;
@@ -49,9 +49,9 @@ export const AuthProvider = ({ children }) => {
       return userData;
     }
     throw new Error(response.data?.error?.message || 'Login failed');
-  };
+  }, []);
 
-  const register = async (payload) => {
+  const register = useCallback(async (payload) => {
     const response = await authAPI.register(payload);
     if (response.data?.success) {
       const { user: userData, tokens } = response.data.data;
@@ -63,9 +63,9 @@ export const AuthProvider = ({ children }) => {
       return userData;
     }
     throw new Error(response.data?.error?.message || 'Registration failed');
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     const refreshToken = localStorage.getItem('bizpermit_refresh_token');
     try {
       if (refreshToken) {
@@ -80,24 +80,27 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setToken(null);
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      user,
+      token,
+      isAuthenticated: !!user && !!token,
+      isLoading,
+      login,
+      register,
+      logout,
+      role: user?.role || null,
+      isBusinessOwner: user?.role === 'BUSINESS_OWNER',
+      isDepartmentOfficer: user?.role === 'DEPARTMENT_OFFICER',
+      isSuperAdmin: user?.role === 'SUPER_ADMIN',
+    }),
+    [user, token, isLoading, login, register, logout]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isAuthenticated: !!user && !!token,
-        isLoading,
-        login,
-        register,
-        logout,
-        role: user?.role || null,
-        isBusinessOwner: user?.role === 'BUSINESS_OWNER',
-        isDepartmentOfficer: user?.role === 'DEPARTMENT_OFFICER',
-        isSuperAdmin: user?.role === 'SUPER_ADMIN',
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

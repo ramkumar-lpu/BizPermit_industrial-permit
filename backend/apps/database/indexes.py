@@ -4,11 +4,14 @@ Implements the indexing strategy specified in DATABASE_DESIGN.md.
 """
 
 import logging
+import threading
 from pymongo import ASCENDING, DESCENDING, TEXT
 from pymongo.errors import OperationFailure
 from apps.database.connection import get_db
 
 logger = logging.getLogger('bizpermit.database')
+_index_lock = threading.Lock()
+_last_indexed_db_id = None
 
 
 def _repair_non_sparse_unique_index(collection, key_field: str):
@@ -24,14 +27,19 @@ def _repair_non_sparse_unique_index(collection, key_field: str):
         pass
 
 
-def ensure_all_indexes():
+def ensure_all_indexes(force: bool = False):
     """
     Creates all necessary indexes across core collections.
-    Safe to call repeatedly; MongoDB ignores already existing identical indexes.
+    Idempotent per database instance to avoid duplicate index creation round-trips on startup.
     """
+    global _last_indexed_db_id
     try:
         db = get_db()
-        logger.info("Initializing MongoDB indexes across collections...")
+        db_id = id(db)
+        with _index_lock:
+            if not force and _last_indexed_db_id == db_id:
+                return True
+            logger.info("Initializing MongoDB indexes across collections...")
 
         # 1. users
         db.users.create_index([("email", ASCENDING)], unique=True)
@@ -201,6 +209,7 @@ def ensure_all_indexes():
         db.grievance_audit_logs.create_index([("actor_id", ASCENDING), ("timestamp", DESCENDING)])
         db.grievance_audit_logs.create_index([("action", ASCENDING)])
 
+        _last_indexed_db_id = db_id
         logger.info("Successfully initialized all MongoDB indexes.")
         return True
     except Exception as exc:

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { businessAPI } from '../services/api';
 import { useAuth } from './AuthContext';
 
@@ -13,18 +13,30 @@ export const FacilityProvider = ({ children }) => {
   const [isLoadingFacilities, setIsLoadingFacilities] = useState(false);
   const [facilityError, setFacilityError] = useState(null);
 
-  useEffect(() => {
-    if (isAuthenticated && isBusinessOwner) {
-      loadBusinesses();
-    } else {
-      setBusinesses([]);
-      setCurrentBusiness(null);
+  const loadLocations = useCallback(async (businessId) => {
+    setFacilityError(null);
+    try {
+      const res = await businessAPI.listLocations(businessId);
+      const locList = res.data?.data;
+      if (!Array.isArray(locList)) {
+        throw new Error('The server returned an invalid business location list.');
+      }
+      setLocations(locList);
+      if (locList.length > 0) {
+        setCurrentLocation(locList[0]);
+      } else {
+        setCurrentLocation(null);
+      }
+      return locList;
+    } catch (err) {
       setLocations([]);
       setCurrentLocation(null);
+      setFacilityError(err.response?.data?.error?.message || err.message || 'Failed to load business locations.');
+      return [];
     }
-  }, [isAuthenticated, isBusinessOwner]);
+  }, []);
 
-  const loadBusinesses = async () => {
+  const loadBusinesses = useCallback(async () => {
     setIsLoadingFacilities(true);
     setFacilityError(null);
     try {
@@ -52,32 +64,20 @@ export const FacilityProvider = ({ children }) => {
     } finally {
       setIsLoadingFacilities(false);
     }
-  };
+  }, [loadLocations]);
 
-  const loadLocations = async (businessId) => {
-    setFacilityError(null);
-    try {
-      const res = await businessAPI.listLocations(businessId);
-      const locList = res.data?.data;
-      if (!Array.isArray(locList)) {
-        throw new Error('The server returned an invalid business location list.');
-      }
-      setLocations(locList);
-      if (locList.length > 0) {
-        setCurrentLocation(locList[0]);
-      } else {
-        setCurrentLocation(null);
-      }
-      return locList;
-    } catch (err) {
+  useEffect(() => {
+    if (isAuthenticated && isBusinessOwner) {
+      loadBusinesses();
+    } else {
+      setBusinesses([]);
+      setCurrentBusiness(null);
       setLocations([]);
       setCurrentLocation(null);
-      setFacilityError(err.response?.data?.error?.message || err.message || 'Failed to load business locations.');
-      return [];
     }
-  };
+  }, [isAuthenticated, isBusinessOwner, loadBusinesses]);
 
-  const selectBusiness = async (biz) => {
+  const selectBusiness = useCallback(async (biz) => {
     setFacilityError(null);
     setCurrentBusiness(biz);
     if (biz?.id) {
@@ -88,9 +88,9 @@ export const FacilityProvider = ({ children }) => {
         setIsLoadingFacilities(false);
       }
     }
-  };
+  }, [loadLocations]);
 
-  const createBusiness = async (data) => {
+  const createBusiness = useCallback(async (data) => {
     const res = await businessAPI.create(data);
     const newBiz = res.data?.data;
     await loadBusinesses();
@@ -99,9 +99,9 @@ export const FacilityProvider = ({ children }) => {
       await loadLocations(newBiz.id);
     }
     return newBiz;
-  };
+  }, [loadBusinesses, loadLocations]);
 
-  const updateBusiness = async (id, data) => {
+  const updateBusiness = useCallback(async (id, data) => {
     const res = await businessAPI.update(id, data);
     const updated = res.data?.data;
     setBusinesses((prev) => prev.map((b) => (b.id === id ? updated : b)));
@@ -109,39 +109,61 @@ export const FacilityProvider = ({ children }) => {
       setCurrentBusiness(updated);
     }
     return updated;
-  };
+  }, [currentBusiness?.id]);
 
-  const deleteBusiness = async (id) => {
+  const deleteBusiness = useCallback(async (id) => {
     await businessAPI.delete(id);
     await loadBusinesses();
-  };
+  }, [loadBusinesses]);
 
-  const createLocation = async (businessId, data) => {
+  const createLocation = useCallback(async (businessId, data) => {
     const res = await businessAPI.createLocation(businessId, data);
     const newLoc = res.data?.data;
     await loadLocations(businessId);
     return newLoc;
-  };
+  }, [loadLocations]);
+
+  const refreshLocations = useCallback(
+    () => (currentBusiness ? loadLocations(currentBusiness.id) : Promise.resolve([])),
+    [currentBusiness, loadLocations]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      businesses,
+      currentBusiness,
+      selectBusiness,
+      locations,
+      currentLocation,
+      setCurrentLocation,
+      isLoadingFacilities,
+      facilityError,
+      refreshFacilities: loadBusinesses,
+      refreshLocations,
+      createBusiness,
+      updateBusiness,
+      deleteBusiness,
+      createLocation,
+    }),
+    [
+      businesses,
+      currentBusiness,
+      selectBusiness,
+      locations,
+      currentLocation,
+      isLoadingFacilities,
+      facilityError,
+      loadBusinesses,
+      refreshLocations,
+      createBusiness,
+      updateBusiness,
+      deleteBusiness,
+      createLocation,
+    ]
+  );
 
   return (
-    <FacilityContext.Provider
-      value={{
-        businesses,
-        currentBusiness,
-        selectBusiness,
-        locations,
-        currentLocation,
-        setCurrentLocation,
-        isLoadingFacilities,
-        facilityError,
-        refreshFacilities: loadBusinesses,
-        refreshLocations: () => currentBusiness && loadLocations(currentBusiness.id),
-        createBusiness,
-        updateBusiness,
-        deleteBusiness,
-        createLocation,
-      }}
-    >
+    <FacilityContext.Provider value={contextValue}>
       {children}
     </FacilityContext.Provider>
   );

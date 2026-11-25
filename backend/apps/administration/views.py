@@ -791,15 +791,22 @@ class AdminApplicationMonitoringView(APIView):
         total_count = db.applications.count_documents(query)
         apps = list(db.applications.find(query).sort("created_at", -1).skip(skip).limit(page_size))
 
+        biz_map = BaseRepository("businesses").find_by_ids(
+            [app.get("business_id") for app in apps],
+            projection={"legal_name": 1}
+        )
+        loc_map = BaseRepository("locations").find_by_ids(
+            [app.get("location_id") for app in apps],
+            projection={"location_name": 1}
+        )
+
         serialized = []
         for app in apps:
             s_app = BaseRepository.serialize_doc(app)
-            # Attach business name
-            biz = db.businesses.find_one({"_id": BaseRepository.to_object_id(app.get("business_id"))})
+            biz = biz_map.get(str(app.get("business_id")))
             if biz:
                 s_app["business_name"] = biz.get("legal_name")
-            # Attach location name
-            loc = db.locations.find_one({"_id": BaseRepository.to_object_id(app.get("location_id"))})
+            loc = loc_map.get(str(app.get("location_id")))
             if loc:
                 s_app["location_name"] = loc.get("location_name")
             serialized.append(s_app)
@@ -899,12 +906,17 @@ class OfficerDashboardMetricsView(APIView):
             "state_code": state_code
         }
 
-        total_assigned_apps = db.applications.count_documents(scoped_filter)
-        pending_scrutiny = db.applications.count_documents({**scoped_filter, "status": "SUBMITTED"})
-        under_scrutiny = db.applications.count_documents({**scoped_filter, "status": "UNDER_SCRUTINY"})
-        clarifications_awaited = db.applications.count_documents({**scoped_filter, "status": "CLARIFICATION_REQUESTED"})
-        recommended_count = db.applications.count_documents({**scoped_filter, "status": "RECOMMENDED"})
-        rejected_count = db.applications.count_documents({**scoped_filter, "status": "REJECTED"})
+        app_counts_agg = list(db.applications.aggregate([
+            {"$match": scoped_filter},
+            {"$group": {"_id": "$status", "count": {"$sum": 1}}}
+        ]))
+        status_counts = {row["_id"]: row["count"] for row in app_counts_agg}
+        total_assigned_apps = sum(status_counts.values())
+        pending_scrutiny = status_counts.get("SUBMITTED", 0)
+        under_scrutiny = status_counts.get("UNDER_SCRUTINY", 0)
+        clarifications_awaited = status_counts.get("CLARIFICATION_REQUESTED", 0)
+        recommended_count = status_counts.get("RECOMMENDED", 0)
+        rejected_count = status_counts.get("REJECTED", 0)
 
         # Scoped Grievance counts
         scoped_grievances = db.grievances.count_documents({
@@ -923,10 +935,14 @@ class OfficerDashboardMetricsView(APIView):
 
         # Recent scoped applications
         recent_scoped_apps = list(db.applications.find(scoped_filter).sort("updated_at", -1).limit(5))
+        recent_biz_map = BaseRepository("businesses").find_by_ids(
+            [app.get("business_id") for app in recent_scoped_apps],
+            projection={"legal_name": 1}
+        )
         serialized_apps = []
         for app in recent_scoped_apps:
             s_app = BaseRepository.serialize_doc(app)
-            biz = db.businesses.find_one({"_id": BaseRepository.to_object_id(app.get("business_id"))})
+            biz = recent_biz_map.get(str(app.get("business_id")))
             if biz:
                 s_app["business_name"] = biz.get("legal_name")
             serialized_apps.append(s_app)

@@ -167,3 +167,32 @@ SUPABASE_SECRET_KEY = os.getenv('SUPABASE_SECRET_KEY') or os.getenv('SUPABASE_SE
 SUPABASE_SERVICE_ROLE_KEY = SUPABASE_SECRET_KEY
 SUPABASE_BUCKET_NAME = os.getenv('SUPABASE_BUCKET_NAME') or os.getenv('SUPABASE_VAULT_BUCKET', 'bizpermit')
 SUPABASE_VAULT_BUCKET = SUPABASE_BUCKET_NAME
+
+# Structured Console Logging for Gunicorn / Docker stdout
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '[%(asctime)s] %(levelname)s %(name)s: %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'bizpermit': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}

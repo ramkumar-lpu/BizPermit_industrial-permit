@@ -52,9 +52,10 @@ def _enrich_document_previews(vault_ids):
         return []
     doc_repo = DocumentRepository()
     storage_service = SupabaseStorageService()
+    doc_map = doc_repo.find_by_ids(vault_ids)
     results = []
     for vid in vault_ids:
-        doc = doc_repo.find_by_id(vid)
+        doc = doc_map.get(str(vid))
         if doc:
             storage_path = doc.get("storage_object_path") or doc.get("storage_path") or doc.get("file_path")
             signed_url = None
@@ -77,6 +78,23 @@ def _enrich_document_previews(vault_ids):
 # =============================================================================
 # APPLICANT ENDPOINTS
 # =============================================================================
+
+def _validate_vault_document_ownership(vault_ids, user):
+    """Batch-validates that all vault_ids belong to user; returns error response or None."""
+    if not vault_ids:
+        return None
+    doc_repo = DocumentRepository()
+    user_id = str(getattr(user, "id", None) or getattr(user, "_id", None))
+    doc_map = doc_repo.find_by_ids(vault_ids, projection={"owner_user_id": 1})
+    for vid in vault_ids:
+        doc = doc_map.get(str(vid))
+        if not doc or str(doc.get("owner_user_id")) != user_id:
+            return api_error_response(
+                message=f"Access forbidden: Vault document '{vid}' does not belong to you.",
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+    return None
+
 
 class GrievanceListCreateView(APIView):
     permission_classes = [IsBusinessOwner]
@@ -109,16 +127,9 @@ class GrievanceListCreateView(APIView):
 
         # Secure document ownership check: verify applicant owns attached documents
         vault_ids = serializer.validated_data.get("vault_document_ids", [])
-        if vault_ids:
-            doc_repo = DocumentRepository()
-            user_id = str(getattr(request.user, "id", None) or getattr(request.user, "_id", None))
-            for vid in vault_ids:
-                doc = doc_repo.find_by_id(vid)
-                if not doc or str(doc.get("owner_user_id")) != user_id:
-                    return api_error_response(
-                        message=f"Access forbidden: Vault document '{vid}' does not belong to you.",
-                        status_code=status.HTTP_403_FORBIDDEN
-                    )
+        ownership_error = _validate_vault_document_ownership(vault_ids, request.user)
+        if ownership_error:
+            return ownership_error
 
         try:
             grievance = self.repo.submit_grievance(
@@ -219,16 +230,9 @@ class GrievanceRespondClarificationView(APIView):
 
         # Validate attached vault documents ownership
         vault_ids = serializer.validated_data.get("vault_document_ids", [])
-        if vault_ids:
-            doc_repo = DocumentRepository()
-            user_id = str(getattr(request.user, "id", None) or getattr(request.user, "_id", None))
-            for vid in vault_ids:
-                doc = doc_repo.find_by_id(vid)
-                if not doc or str(doc.get("owner_user_id")) != user_id:
-                    return api_error_response(
-                        message=f"Access forbidden: Vault document '{vid}' does not belong to you.",
-                        status_code=status.HTTP_403_FORBIDDEN
-                    )
+        ownership_error = _validate_vault_document_ownership(vault_ids, request.user)
+        if ownership_error:
+            return ownership_error
 
         try:
             res = self.repo.respond_clarification(

@@ -102,9 +102,13 @@ class ComplianceObligationListCreateView(APIView):
 
         serialized = [BaseRepository.serialize_doc(o) for o in obligations]
 
-        # Attach facility name for display
+        # Attach facility name for display (batch lookup)
+        loc_map = loc_repo.find_by_ids(
+            [item.get("location_id") for item in serialized],
+            projection={"location_name": 1}
+        )
         for item in serialized:
-            loc = loc_repo.find_by_id(item["location_id"])
+            loc = loc_map.get(str(item.get("location_id")))
             if loc:
                 item["facility_name"] = loc.get("location_name")
 
@@ -427,9 +431,13 @@ class ComplianceCalendarEventsView(APIView):
             limit=200
         )
 
+        loc_map = loc_repo.find_by_ids(
+            [ob.get("location_id") for ob in obligations],
+            projection={"location_name": 1}
+        )
         events = []
         for ob in obligations:
-            loc = loc_repo.find_by_id(ob["location_id"])
+            loc = loc_map.get(str(ob.get("location_id")))
             fac_name = loc.get("location_name", "Primary Facility") if loc else "Facility"
             events.append({
                 "id": str(ob["_id"]),
@@ -466,9 +474,13 @@ class ComplianceMetricsView(APIView):
             business_id=business_id,
             location_id=location_id
         )
+        loc_map = loc_repo.find_by_ids(
+            [agg.get("_id") for agg in facility_aggs],
+            projection={"location_name": 1, "jurisdiction_hierarchy": 1}
+        )
         facilities_list = []
         for agg in facility_aggs:
-            loc = loc_repo.find_by_id(agg["_id"])
+            loc = loc_map.get(str(agg["_id"]))
             if loc:
                 facilities_list.append({
                     "facility_id": str(agg["_id"]),
@@ -504,8 +516,12 @@ class ComplianceRenewalsListView(APIView):
         )
 
         serialized = [BaseRepository.serialize_doc(r) for r in renewals]
+        loc_map = loc_repo.find_by_ids(
+            [item.get("location_id") for item in serialized],
+            projection={"location_name": 1}
+        )
         for item in serialized:
-            loc = loc_repo.find_by_id(item["location_id"])
+            loc = loc_map.get(str(item.get("location_id")))
             if loc:
                 item["facility_name"] = loc.get("location_name")
 
