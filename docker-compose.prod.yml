@@ -1,0 +1,41 @@
+# ==============================================================================
+# BIZPERMIT DOCKER COMPOSE — PRODUCTION OVERRIDES
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+# ==============================================================================
+
+services:
+  mongo:
+    # In production, do not expose MongoDB port publicly to host network
+    ports: !reset []
+    restart: always
+
+  backend:
+    restart: always
+    command: gunicorn bizpermit_core.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120
+    # Do not mount host directory in production
+    volumes: !reset []
+    # Backend port is internal only; clients reach it through Nginx reverse proxy
+    ports: !reset []
+    environment:
+      DEBUG: "False"
+      AUTO_SEED_DEMO_DATA: "False"
+      USE_MOCK_DB_IF_UNAVAILABLE: "False"
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,backend,frontend}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost,http://localhost:80,http://127.0.0.1,http://127.0.0.1:80,http://localhost:8080,http://127.0.0.1:8080}
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bizpermit-frontend-prod
+    restart: always
+    ports: !override
+      - "${PROD_PORT:-8085}:80"
+    volumes: !reset []
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

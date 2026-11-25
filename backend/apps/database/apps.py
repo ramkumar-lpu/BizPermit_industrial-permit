@@ -1,6 +1,7 @@
 import sys
 import logging
 from django.apps import AppConfig
+from django.conf import settings
 
 logger = logging.getLogger('bizpermit.database')
 
@@ -17,10 +18,11 @@ class DatabaseConfig(AppConfig):
             # Gracefully log or defer if connection is pending
             pass
 
-        # Auto-seed demo users & baseline catalog if DB is unseeded
+        # Auto-seed demo users & baseline catalog if DB is unseeded (environment controlled)
         is_testing = 'pytest' in sys.modules or (len(sys.argv) > 1 and sys.argv[1] == 'test')
         is_management_task = (len(sys.argv) > 1 and sys.argv[1] in ['makemigrations', 'migrate', 'collectstatic', 'help'])
-        if not is_testing and not is_management_task:
+        auto_seed = getattr(settings, 'AUTO_SEED_DEMO_DATA', False)
+        if not is_testing and not is_management_task and auto_seed:
             try:
                 from apps.authentication.repository import UserRepository
                 user_repo = UserRepository()

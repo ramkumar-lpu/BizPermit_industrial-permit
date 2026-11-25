@@ -1,6 +1,7 @@
 # Project-specific generated / private content
 .env
 .env.*
+!.env.example
 backend/.env
 backend/.env.*
 frontend/.env
@@ -12,6 +13,9 @@ local_db/
 docs/
 *.md
 *.MD
+!README.md
+!DOCKER_SETUP.md
+!BIZPERMIT_DOCKER_IMPLEMENTATION_REPORT.md
 
 # Python
 __pycache__/

@@ -149,6 +149,7 @@ CORS_ALLOW_CREDENTIALS = True
 MONGODB_URI = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
 MONGODB_DB_NAME = os.getenv('MONGODB_DB_NAME', 'bizpermit_db')
 USE_MOCK_DB_IF_UNAVAILABLE = os.getenv('USE_MOCK_DB_IF_UNAVAILABLE', 'True').lower() in ('true', '1', 'yes')
+AUTO_SEED_DEMO_DATA = os.getenv('AUTO_SEED_DEMO_DATA', 'True' if DEBUG else 'False').lower() in ('true', '1', 'yes')
 
 # JWT Cryptographic Settings
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'bizpermit-default-jwt-secret-phase1-2026')
