@@ -199,7 +199,7 @@ def test_01_complete_document_lifecycle(audit_fixture):
     assert dl_res.json()["data"]["expires_in_seconds"] == 900
 
     # Client fetches bytes using signed URL without any Authorization header
-    raw_res = requests.get(download_url, timeout=15)
+    raw_res = storage._session.get(download_url, timeout=15)
     assert raw_res.status_code == 200
     assert raw_res.content == VALID_PDF_BYTES
 
@@ -448,18 +448,18 @@ def test_06_supabase_cloud_security_and_expired_urls(audit_fixture):
         # 3. Signed URL with 1-second TTL expires
         short_url = storage.create_signed_download_url(temp_path, expires_in=1)
         time.sleep(2)
-        exp_res = requests.get(short_url, timeout=10)
+        exp_res = storage._session.get(short_url, timeout=10)
         assert exp_res.status_code in (400, 403), f"Expired URL should fail but returned {exp_res.status_code}"
 
         # 4. Tampered signed URL token rejected
         tampered_url = short_url[:-5] + "XXXXX"
-        tamper_res = requests.get(tampered_url, timeout=10)
+        tamper_res = storage._session.get(tampered_url, timeout=10)
         assert tamper_res.status_code in (400, 403), f"Tampered URL should fail but returned {tamper_res.status_code}"
 
         # 5. Direct unauthenticated bucket access without token is blocked
         clean_path = temp_path.lstrip('/')
         direct_pub_url = f"{storage.base_api}/object/public/{storage.bucket}/{clean_path}"
-        pub_res = requests.get(direct_pub_url, timeout=10)
+        pub_res = storage._session.get(direct_pub_url, timeout=10)
         assert pub_res.status_code in (400, 401, 403, 404)
         assert b"Expiration and Tamper Test" not in pub_res.content
     finally:
