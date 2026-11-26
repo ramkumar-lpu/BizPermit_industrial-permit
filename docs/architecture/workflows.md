@@ -1,10 +1,5 @@
 # BizPermit — End-to-End Application Workflow Map
 
-**Branch:** `feature/e2e-integration-testing`  
-**Date:** November 25, 2026  
-
----
-
 ## 1. Business Owner Journey (`BUSINESS_OWNER`)
 1. **Registration & Login:** `POST /api/v1/auth/register` -> `POST /api/v1/auth/login` -> `GET /api/v1/auth/me` -> `POST /api/v1/auth/refresh` -> `POST /api/v1/auth/logout` (`/register`, `/login`, `/forgot-password`, `/reset-password`).
 2. **Business & Facility Setup:** `POST /api/v1/businesses` -> `POST /api/v1/businesses/<id>/locations` -> `POST /api/v1/locations/<id>/evaluate` (KYA applicability engine) (`/facilities`, `/kya`).

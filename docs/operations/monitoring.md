@@ -1,9 +1,5 @@
 # BizPermit — Monitoring, Logging & Observability Guide
 
-**Branch:** `feature/production-readiness`  
-
----
-
 ## 1. Health & Probe Endpoints
 
 | Endpoint | Purpose | Healthy Status | Unhealthy Status |

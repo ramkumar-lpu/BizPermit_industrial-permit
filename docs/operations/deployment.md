@@ -1,9 +1,5 @@
 # BizPermit — Production Deployment, Backup & Operations Guide
 
-**Branch:** `feature/production-readiness`  
-
----
-
 ## 1. Pre-Deployment Checklist
 - [ ] Copy `.env.example` to `.env` on the target server (never commit `.env`).
 - [ ] Set `DEBUG=False`, `AUTO_SEED_DEMO_DATA=False`, `USE_MOCK_DB_IF_UNAVAILABLE=False`.

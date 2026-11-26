@@ -1,4 +1,4 @@
-# BizPermit — Docker Setup & Deployment Guide
+# BizPermit — Docker Development and Production Setup
 
 This document describes how to build, run, and manage the complete **BizPermit (Industrial Compliance & Document Approval Platform)** using Docker and Docker Compose without requiring Python, Node.js, npm, or MongoDB installed on the host machine.
 
@@ -68,14 +68,7 @@ All containers (`bizpermit-mongo`, `bizpermit-backend`, `bizpermit-frontend`) sh
 - **Backend API Gateway:** [http://localhost:8000/api/v1/health](http://localhost:8000/api/v1/health)
 - **MongoDB Host Port:** `localhost:27017`
 
-### Development Credentials (Auto-seeded when DB is empty)
-| Role | Email | Password |
-|---|---|---|
-| **Super Admin** | `admin@bizpermit.gov.in` | `Admin@12345` |
-| **Business Owner** | `owner@horizonauto.in` | `Owner@12345` |
-| **GPCB Officer** | `officer.gpcb@gujarat.gov.in` | `Officer@12345` |
-| **DISH Officer** | `officer.dish@gujarat.gov.in` | `Officer@12345` |
-| **MPCB Officer** | `officer.mpcb@maharashtra.gov.in` | `Officer@12345` |
+Development demo data may be seeded when `AUTO_SEED_DEMO_DATA` is enabled. Do not use demo accounts or development secrets outside a local development environment.
 
 ---
 
