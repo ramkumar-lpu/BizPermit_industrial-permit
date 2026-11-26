@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 "fixed_due_day": 30,
                 "source_reference": "Rule 14 of the Environment (Protection) Rules, 1986",
                 "source_verification_status": "VERIFIED",
-                "official_source_url": "https://cpcb.nic.in",
+                "official_source_url": "https://cpcb.gov.in",
                 "last_verified_date": "2026-10-15",
                 "related_approval_code": "GPCB-CTO-IND",
                 "applicability_rules": {
@@ -156,7 +156,7 @@ class Command(BaseCommand):
                 "fixed_due_day": 30,
                 "source_reference": "Section 5 of Environment (Protection) Act, 1986 & CGWA Guidelines 2020",
                 "source_verification_status": "VERIFIED",
-                "official_source_url": "https://cgwa-noc.gov.in",
+                "official_source_url": "https://cgwa-bhuneer.mowr.gov.in/",
                 "last_verified_date": "2026-10-15",
                 "related_approval_code": "CGWA-NOC-BORE",
                 "applicability_rules": {

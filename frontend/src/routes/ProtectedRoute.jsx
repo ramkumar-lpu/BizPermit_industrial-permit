@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getRoleHomeRoute } from '../utils/navigation';
 
 export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
@@ -22,13 +23,7 @@ export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    const roleHome =
-      user?.role === 'SUPER_ADMIN'
-        ? '/admin/dashboard'
-        : user?.role === 'DEPARTMENT_OFFICER'
-        ? '/officer/dashboard'
-        : '/dashboard';
-    return <Navigate to={roleHome} replace />;
+    return <Navigate to={getRoleHomeRoute(user)} replace />;
   }
 
   return children;

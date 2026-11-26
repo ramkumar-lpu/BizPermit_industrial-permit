@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getRoleHomeRoute } from '../utils/navigation';
 import { Card, CardBody } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { AlertCircle, Lock, Mail, User, Phone, CheckCircle2 } from 'lucide-react';
@@ -20,10 +21,16 @@ const registerSchema = z.object({
 });
 
 export const RegisterPage = () => {
-  const { register: registerAuth } = useAuth();
+  const { register: registerAuth, user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate(getRoleHomeRoute(user), { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const {
     register,
@@ -55,7 +62,7 @@ export const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-brand-cream flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-2 mb-2">
+        <Link to={getRoleHomeRoute(user)} className="inline-flex items-center gap-2 mb-2" title={user ? 'Go to Workspace Dashboard' : 'BizPermit Home'}>
           <div className="w-10 h-10 rounded bg-brand-deep-sage flex items-center justify-center text-white font-bold text-xl shadow-sm">
             BP
           </div>

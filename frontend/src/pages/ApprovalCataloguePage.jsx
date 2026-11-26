@@ -3,6 +3,7 @@ import { approvalAPI, jurisdictionAPI } from '../services/api';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
+import { getSourceUrlLabel } from '../utils/portalLabels';
 import {
   Search,
   Filter,
@@ -119,20 +120,26 @@ export const ApprovalCataloguePage = () => {
     switch (status) {
       case 'VERIFIED':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-            <CheckCircle2 className="w-3 h-3" /> Verified Official
+          <span
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200"
+            title="This approval record has been reviewed by BizPermit administrators. External government portals and application workflows are independently operated."
+          >
+            <CheckCircle2 className="w-3 h-3" /> Catalog Record Reviewed
           </span>
         );
       case 'NEEDS_REVIEW':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+          <span
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200"
+            title="This approval record is undergoing administrative review."
+          >
             <AlertTriangle className="w-3 h-3" /> Under Review
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-stone-600 bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
-            Platform Ready
+            {status === 'DEMO' ? 'Demo Sample' : 'Platform Ready'}
           </span>
         );
     }
@@ -413,6 +420,16 @@ export const ApprovalCataloguePage = () => {
                   <span className="text-base font-bold text-brand-charcoal font-mono mt-0.5 block">
                     ₹{(selectedApproval.fee_structure?.base_amount || 0).toLocaleString('en-IN')}
                   </span>
+                  {selectedApproval.fee_structure?.statutory_portal_fee_url ? (
+                    <a
+                      href={selectedApproval.fee_structure.statutory_portal_fee_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-flex items-center gap-1 text-[10px] text-brand-deep-sage hover:underline font-medium"
+                    >
+                      Official Fee Schedule <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  ) : null}
                 </div>
               </div>
 
@@ -471,7 +488,8 @@ export const ApprovalCataloguePage = () => {
                       rel="noopener noreferrer"
                       className="text-stone-600 hover:underline flex items-center gap-1 font-mono text-[10px]"
                     >
-                      Official Source <ExternalLink className="w-2.5 h-2.5" />
+                      {getSourceUrlLabel(selectedApproval.source_url, selectedApproval.official_portal_url)}{' '}
+                      <ExternalLink className="w-2.5 h-2.5" />
                     </a>
                   ) : (
                     <span className="text-stone-400 font-mono text-[10px]">State Gazette / Citizen Charter</span>

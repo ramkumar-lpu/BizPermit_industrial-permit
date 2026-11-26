@@ -14,7 +14,7 @@ class DocumentChecklistItemSerializer(serializers.Serializer):
 class FeeStructureSerializer(serializers.Serializer):
     currency = serializers.CharField(default="INR")
     base_amount = serializers.FloatField(required=False, default=0.0)
-    statutory_portal_fee_url = serializers.URLField(required=False, allow_blank=True)
+    statutory_portal_fee_url = serializers.URLField(required=False, allow_blank=True, allow_null=True)
 
 class ApprovalCatalogueSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)

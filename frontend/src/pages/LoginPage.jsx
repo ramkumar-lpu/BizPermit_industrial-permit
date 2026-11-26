@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getRoleHomeRoute } from '../utils/navigation';
 import { Card, CardBody, CardHeader } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -15,11 +16,18 @@ const loginSchema = z.object({
 });
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const destination = location.state?.from?.pathname || getRoleHomeRoute(user);
+      navigate(destination, { replace: true });
+    }
+  }, [isAuthenticated, user, navigate, location]);
 
   const {
     register,
@@ -35,12 +43,7 @@ export const LoginPage = () => {
     setServerError('');
     try {
       const userData = await login(data.email, data.password);
-      let defaultDestination = '/dashboard';
-      if (userData?.role === 'SUPER_ADMIN') {
-        defaultDestination = '/admin/dashboard';
-      } else if (userData?.role === 'DEPARTMENT_OFFICER') {
-        defaultDestination = '/officer/dashboard';
-      }
+      const defaultDestination = getRoleHomeRoute(userData);
       const destination = location.state?.from?.pathname || defaultDestination;
       navigate(destination, { replace: true });
     } catch (err) {
@@ -65,7 +68,7 @@ export const LoginPage = () => {
   return (
     <div className="min-h-screen bg-brand-cream flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-2 mb-2">
+        <Link to={getRoleHomeRoute(user)} className="inline-flex items-center gap-2 mb-2" title={user ? 'Go to Workspace Dashboard' : 'BizPermit Home'}>
           <div className="w-10 h-10 rounded bg-brand-deep-sage flex items-center justify-center text-white font-bold text-xl shadow-sm">
             BP
           </div>

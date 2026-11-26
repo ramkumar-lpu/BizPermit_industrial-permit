@@ -107,7 +107,7 @@ SEED_SCHEMES = [
             "guidelines_title": "Gujarat Industrial Policy 2020",
             "source_url": "https://ic.gujarat.gov.in",
             "last_verified_date": "2026-11-15",
-            "verification_confidence": "VERIFIED"
+            "verification_confidence": "NEEDS_CONFIRMATION"
         },
         "eligibility_rules": {
             "state_code": "IN-GJ",
@@ -156,7 +156,7 @@ SEED_SCHEMES = [
             "effective_to": "2024-03-31",
             "relevant_clause": "Clause 2.1 & 3.2 (Effective Steps & Gestation)",
             "guidelines_title": "Package Scheme of Incentives 2019",
-            "source_url": "https://di.maharashtra.gov.in",
+            "source_url": "https://industry.maharashtra.gov.in/",
             "last_verified_date": "2026-11-15",
             "verification_confidence": "PARTIALLY_VERIFIED"
         },
@@ -366,7 +366,7 @@ SEED_SCHEMES = [
             "guidelines_title": "Guidelines for Scheme for Creation / Expansion of Food Processing Capacities",
             "source_url": "https://mofpi.gov.in",
             "last_verified_date": "2026-11-15",
-            "verification_confidence": "VERIFIED"
+            "verification_confidence": "NEEDS_CONFIRMATION"
         },
         "eligibility_rules": {
             "sectors": ["FOOD_PROCESSING", "AGRO_PROCESSING", "DAIRY", "MEAT", "HORTICULTURE"],
@@ -419,7 +419,7 @@ SEED_SCHEMES = [
             "guidelines_title": "Pradhan Mantri Kisan Urja Suraksha evam Utthaan Mahabhiyan",
             "source_url": "https://mnre.gov.in",
             "last_verified_date": "2026-11-15",
-            "verification_confidence": "VERIFIED"
+            "verification_confidence": "NEEDS_CONFIRMATION"
         },
         "eligibility_rules": {
             "applicant_classes": ["FARMER", "FARMER_GROUP", "FPO", "PANCHAYAT", "RENEWABLE_POWER_GENERATOR"],
@@ -471,7 +471,7 @@ SEED_SCHEMES = [
             "guidelines_title": "PLI Scheme for Automobile and Auto Components",
             "source_url": "https://heavyindustries.gov.in",
             "last_verified_date": "2026-11-15",
-            "verification_confidence": "VERIFIED"
+            "verification_confidence": "NEEDS_CONFIRMATION"
         },
         "eligibility_rules": {
             "fresh_intake_closed": True,

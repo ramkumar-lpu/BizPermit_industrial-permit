@@ -177,11 +177,11 @@ class Command(BaseCommand):
                 "tier": "CENTRAL",
                 "state_code": None,
                 "jurisdiction_code": "IN",
-                "portal_url": "https://cpcb.nic.in",
+                "portal_url": "https://cpcb.gov.in/",
                 "regulatory_domain": "Environmental Pollution Standards & Categorisation",
                 "nodal_officer": {"designation": "Chairman", "contact_email": "cpcb@nic.in", "contact_phone": "+91-11-43102030"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://cpcb.nic.in/about-cpcb.php",
+                "source_url": "https://cpcb.gov.in/",
                 "last_verified_at": "2026-10-01"
             },
             {
@@ -191,11 +191,11 @@ class Command(BaseCommand):
                 "tier": "CENTRAL",
                 "state_code": None,
                 "jurisdiction_code": "IN",
-                "portal_url": "https://peso.gov.in",
+                "portal_url": "https://peso.gov.in/",
                 "regulatory_domain": "Explosives, Gas Cylinders, Petroleum Storage Licenses",
                 "nodal_officer": {"designation": "Chief Controller of Explosives", "contact_email": "explosives@explosives.gov.in", "contact_phone": "+91-712-2510248"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://peso.gov.in/about-us",
+                "source_url": "https://peso.gov.in/",
                 "last_verified_at": "2026-09-15"
             },
             {
@@ -205,11 +205,11 @@ class Command(BaseCommand):
                 "tier": "CENTRAL",
                 "state_code": None,
                 "jurisdiction_code": "IN",
-                "portal_url": "https://cgwa-noc.gov.in",
+                "portal_url": "https://cgwa-bhuneer.mowr.gov.in/",
                 "regulatory_domain": "Ground Water Extraction NOC for Commercial & Industrial Units",
                 "nodal_officer": {"designation": "Member Secretary", "contact_email": "cgwa@nic.in", "contact_phone": "+91-11-23383561"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://cgwa-noc.gov.in/LandingPage/Guideline.htm",
+                "source_url": "https://cgwa-bhuneer.mowr.gov.in/",
                 "last_verified_at": "2026-08-20"
             },
             {
@@ -223,7 +223,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Occupational Safety & Health Administration in Factories",
                 "nodal_officer": {"designation": "Director General", "contact_email": "dg@dgfasli.nic.in", "contact_phone": "+91-22-24092203"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://dgfasli.gov.in/en/about-us",
+                "source_url": "https://dgfasli.gov.in/",
                 "last_verified_at": "2026-09-01"
             },
             # State Pollution Boards
@@ -238,7 +238,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Consent to Establish (CTE) & Consent to Operate (CTO)",
                 "nodal_officer": {"designation": "Member Secretary", "contact_email": "ms-gpcb@gujarat.gov.in", "contact_phone": "+91-79-23232152"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://gpcb.gujarat.gov.in/consent-management",
+                "source_url": "https://gpcb.gujarat.gov.in/",
                 "last_verified_at": "2026-10-15"
             },
             {
@@ -252,7 +252,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Water, Air Acts & Hazardous Waste Consents",
                 "nodal_officer": {"designation": "Member Secretary", "contact_email": "ms@mpcb.gov.in", "contact_phone": "+91-22-24010437"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://mpcb.gov.in/consent-management",
+                "source_url": "https://mpcb.gov.in/",
                 "last_verified_at": "2026-10-10"
             },
             {
@@ -266,7 +266,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Industrial CTE, CTO & Biomedical Waste Clearances",
                 "nodal_officer": {"designation": "Chairman", "contact_email": "chairman@tnpcb.gov.in", "contact_phone": "+91-44-22353145"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://tnpcb.gov.in/consent-management.php",
+                "source_url": "https://tnpcb.gov.in/",
                 "last_verified_at": "2026-09-25"
             },
             {
@@ -280,7 +280,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Consent Management under Water & Air Acts",
                 "nodal_officer": {"designation": "Member Secretary", "contact_email": "ms@kspcb.gov.in", "contact_phone": "+91-80-25589112"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://kspcb.karnataka.gov.in/about-us",
+                "source_url": "https://kspcb.karnataka.gov.in/",
                 "last_verified_at": "2026-09-18"
             },
             {
@@ -290,11 +290,11 @@ class Command(BaseCommand):
                 "tier": "STATE",
                 "state_code": "IN-UP",
                 "jurisdiction_code": "IN-UP",
-                "portal_url": "https://uppcb.com",
+                "portal_url": "https://niveshmitra.up.nic.in/",
                 "regulatory_domain": "Environmental Consents & Emission Auditing",
                 "nodal_officer": {"designation": "Member Secretary", "contact_email": "ms@uppcb.com", "contact_phone": "+91-522-2720828"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://uppcb.com/consent_management.htm",
+                "source_url": "https://niveshmitra.up.nic.in/",
                 "last_verified_at": "2026-09-05"
             },
             # Factories & Boilers Inspectorates
@@ -309,7 +309,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Factories Act 1948 & Indian Boilers Act 1923 Administration",
                 "nodal_officer": {"designation": "Director", "contact_email": "dish@gujarat.gov.in", "contact_phone": "+91-79-23253805"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://dish.gujarat.gov.in/citizen-charter.htm",
+                "source_url": "https://dish.gujarat.gov.in/",
                 "last_verified_at": "2026-08-30"
             },
             {
@@ -319,11 +319,11 @@ class Command(BaseCommand):
                 "tier": "STATE",
                 "state_code": "IN-MH",
                 "jurisdiction_code": "IN-MH",
-                "portal_url": "https://dish.maharashtra.gov.in",
+                "portal_url": "https://mahadish.in/",
                 "regulatory_domain": "Factory Building Sanction, License & Annual Returns",
                 "nodal_officer": {"designation": "Director", "contact_email": "dishmumbai@maharashtra.gov.in", "contact_phone": "+91-22-26572520"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://dish.maharashtra.gov.in/about-us",
+                "source_url": "https://mahadish.in/",
                 "last_verified_at": "2026-09-12"
             },
             {
@@ -337,7 +337,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Factory Licensing & Worker Safety Clearances",
                 "nodal_officer": {"designation": "Director", "contact_email": "cifbtamilnadu@tn.gov.in", "contact_phone": "+91-44-22500050"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://dish.tn.gov.in/citizen_charter.php",
+                "source_url": "https://dish.tn.gov.in/",
                 "last_verified_at": "2026-08-25"
             },
             # State Fire Services
@@ -348,11 +348,11 @@ class Command(BaseCommand):
                 "tier": "STATE",
                 "state_code": "IN-GJ",
                 "jurisdiction_code": "IN-GJ",
-                "portal_url": "https://fire.gujarat.gov.in",
+                "portal_url": "https://gujfiresafetycop.in/",
                 "regulatory_domain": "Fire Safety NOC & Plan Examination",
                 "nodal_officer": {"designation": "Director Fire Services", "contact_email": "director-fire@gujarat.gov.in", "contact_phone": "+91-79-23257500"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://fire.gujarat.gov.in/guidelines",
+                "source_url": "https://gujfiresafetycop.in/",
                 "last_verified_at": "2026-07-15"
             },
             {
@@ -366,7 +366,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Provisional & Final Fire NOC for Industrial Premises",
                 "nodal_officer": {"designation": "Chief Fire Officer", "contact_email": "mahafire@maharashtra.gov.in", "contact_phone": "+91-22-26677555"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://mahafireservice.gov.in/citizen-charter",
+                "source_url": "https://mahafireservice.gov.in/",
                 "last_verified_at": "2026-08-10"
             },
             # Industrial Development Corporations
@@ -381,7 +381,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Industrial Land Allotment, Building Plan Sanction, Water Connection",
                 "nodal_officer": {"designation": "Vice Chairman & MD", "contact_email": "md@gidc.gujarat.gov.in", "contact_phone": "+91-79-23250636"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://gidc.gujarat.gov.in/allotment-rules",
+                "source_url": "https://gidc.gujarat.gov.in/",
                 "last_verified_at": "2026-09-01"
             },
             {
@@ -391,11 +391,11 @@ class Command(BaseCommand):
                 "tier": "STATE",
                 "state_code": "IN-MH",
                 "jurisdiction_code": "IN-MH",
-                "portal_url": "https://midcindia.org",
+                "portal_url": "https://midc.maharashtra.gov.in/",
                 "regulatory_domain": "Industrial Land, Drainage & Utilities Allotment",
                 "nodal_officer": {"designation": "Chief Executive Officer", "contact_email": "ceo@midcindia.org", "contact_phone": "+91-22-26870052"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://midcindia.org/land-allotment-policy",
+                "source_url": "https://midc.maharashtra.gov.in/",
                 "last_verified_at": "2026-09-10"
             },
             {
@@ -409,7 +409,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Industrial Parks Land Allotment & Infrastructure Clearances",
                 "nodal_officer": {"designation": "Managing Director", "contact_email": "md@sipcot.in", "contact_phone": "+91-44-28554787"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://sipcot.tn.gov.in/land-allotment",
+                "source_url": "https://sipcot.tn.gov.in/",
                 "last_verified_at": "2026-08-15"
             },
             # Municipal Corporations
@@ -424,7 +424,7 @@ class Command(BaseCommand):
                 "regulatory_domain": "Local Building Permission, Trade License & Property Tax Assessment",
                 "nodal_officer": {"designation": "Municipal Commissioner", "contact_email": "commissioner@punecorporation.org", "contact_phone": "+91-20-25501000"},
                 "verification_status": "VERIFIED",
-                "source_url": "https://pmc.gov.in/en/building-permission",
+                "source_url": "https://pmc.gov.in/",
                 "last_verified_at": "2026-07-20"
             }
         ]
@@ -450,15 +450,15 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "The Petroleum Act, 1934 & Petroleum Rules, 2002",
                 "standard_sla_days": 60,
-                "fee_structure": {"currency": "INR", "base_amount": 25000, "statutory_portal_fee_url": "https://peso.gov.in/fee-calculator"},
+                "fee_structure": {"currency": "INR", "base_amount": 25000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "SITE_PLAN", "name": "Fabrication Drawing & Siting Contour Blueprint approved by Competent Person", "is_mandatory": True, "max_size_mb": 25},
                     {"document_type": "FIRE_NOC", "name": "Fire Safety Clearance Certificate from Local Fire Authority", "is_mandatory": True, "max_size_mb": 15},
                     {"document_type": "SAFETY_REPORT", "name": "On-Site Emergency Response Plan & Disaster Management Protocol", "is_mandatory": True, "max_size_mb": 20}
                 ],
                 "applicability_rules": {"requires_hazardous_chemicals": True, "pollution_categories": ["RED", "ORANGE"]},
-                "official_portal_url": "https://peso.gov.in",
-                "source_url": "https://peso.gov.in/petroleum-rules-guidelines",
+                "official_portal_url": "https://peso.gov.in/",
+                "source_url": "https://peso.gov.in/",
                 "last_verified_at": "2026-09-15",
                 "verification_status": "VERIFIED"
             },
@@ -474,14 +474,14 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Section 5 of Environment (Protection) Act, 1986",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 10000, "statutory_portal_fee_url": "https://cgwa-noc.gov.in/fee"},
+                "fee_structure": {"currency": "INR", "base_amount": 10000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "HYDRO_REPORT", "name": "Comprehensive Hydrogeological Assessment Report by Accredited Consultant", "is_mandatory": True, "max_size_mb": 30},
                     {"document_type": "RECHARGE_PLAN", "name": "Rainwater Harvesting & Artificial Ground Water Recharge Blueprint", "is_mandatory": True, "max_size_mb": 20}
                 ],
                 "applicability_rules": {"requires_groundwater": True, "pollution_categories": ["ALL"]},
-                "official_portal_url": "https://cgwa-noc.gov.in",
-                "source_url": "https://cgwa-noc.gov.in/LandingPage/Guideline.htm",
+                "official_portal_url": "https://cgwa-bhuneer.mowr.gov.in/",
+                "source_url": "https://cgwa-bhuneer.mowr.gov.in/",
                 "last_verified_at": "2026-08-20",
                 "verification_status": "VERIFIED"
             },
@@ -497,7 +497,7 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Water (Prevention & Control of Pollution) Act 1974 & Air Act 1981",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 35000, "statutory_portal_fee_url": "https://gpcb.gujarat.gov.in/fees"},
+                "fee_structure": {"currency": "INR", "base_amount": 35000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "SITE_PLAN", "name": "Architectural Plant Layout with Effluent Treatment & Air Stack Markers", "is_mandatory": True, "max_size_mb": 25},
                     {"document_type": "LAND_POSSESSION", "name": "GIDC Land Allotment Letter / Registered Land Title Deed", "is_mandatory": True, "max_size_mb": 15},
@@ -505,7 +505,7 @@ class Command(BaseCommand):
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
                 "official_portal_url": "https://gpcb.gujarat.gov.in",
-                "source_url": "https://gpcb.gujarat.gov.in/consent-management",
+                "source_url": "https://gpcb.gujarat.gov.in/",
                 "last_verified_at": "2026-10-15",
                 "verification_status": "VERIFIED"
             },
@@ -521,14 +521,14 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "Water Act 1974 & Air Act 1981",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 45000, "statutory_portal_fee_url": "https://gpcb.gujarat.gov.in/fees"},
+                "fee_structure": {"currency": "INR", "base_amount": 45000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "CTE_COPY", "name": "Copy of Previously Granted Consent to Establish (CTE)", "is_mandatory": True, "max_size_mb": 10},
                     {"document_type": "COMPLIANCE_REPORT", "name": "CTE Condition Compliance Report with Adequacy Certificate for ETP", "is_mandatory": True, "max_size_mb": 25}
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
                 "official_portal_url": "https://gpcb.gujarat.gov.in",
-                "source_url": "https://gpcb.gujarat.gov.in/consent-management",
+                "source_url": "https://gpcb.gujarat.gov.in/",
                 "last_verified_at": "2026-10-15",
                 "verification_status": "VERIFIED"
             },
@@ -544,14 +544,14 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "Section 6 & 7 of The Factories Act, 1948 & Gujarat Factories Rules, 1963",
                 "standard_sla_days": 30,
-                "fee_structure": {"currency": "INR", "base_amount": 15000, "statutory_portal_fee_url": "https://dish.gujarat.gov.in/schedule"},
+                "fee_structure": {"currency": "INR", "base_amount": 15000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "APPROVED_PLANS", "name": "Factory Building Blueprint Sanctioned by Chief Inspector of Factories", "is_mandatory": True, "max_size_mb": 20},
                     {"document_type": "STABILITY_CERT", "name": "Form 1-A Certificate of Structural Stability issued by Chartered Engineer", "is_mandatory": True, "max_size_mb": 10}
                 ],
                 "applicability_rules": {"min_workforce": 10, "pollution_categories": ["ALL"]},
                 "official_portal_url": "https://dish.gujarat.gov.in",
-                "source_url": "https://dish.gujarat.gov.in/citizen-charter.htm",
+                "source_url": "https://dish.gujarat.gov.in/",
                 "last_verified_at": "2026-08-30",
                 "verification_status": "VERIFIED"
             },
@@ -567,14 +567,14 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "The Indian Boilers Act, 1923 & Indian Boiler Regulations (IBR 1950)",
                 "standard_sla_days": 21,
-                "fee_structure": {"currency": "INR", "base_amount": 8000, "statutory_portal_fee_url": "https://dish.gujarat.gov.in/boilers"},
+                "fee_structure": {"currency": "INR", "base_amount": 8000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "IBR_DRAWING", "name": "Manufacturer IBR Inspection Folder (Form II, Form III, Form IV)", "is_mandatory": True, "max_size_mb": 25},
                     {"document_type": "STEAM_LAYOUT", "name": "Approved Steam Piping Layout Blueprint and Welder Certificates", "is_mandatory": True, "max_size_mb": 15}
                 ],
                 "applicability_rules": {"requires_boiler": True, "pollution_categories": ["ALL"]},
                 "official_portal_url": "https://dish.gujarat.gov.in",
-                "source_url": "https://dish.gujarat.gov.in/boilers-rules",
+                "source_url": "https://dish.gujarat.gov.in/",
                 "last_verified_at": "2026-08-30",
                 "verification_status": "VERIFIED"
             },
@@ -590,13 +590,13 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Gujarat Fire Prevention and Life Safety Measures Act, 2013",
                 "standard_sla_days": 30,
-                "fee_structure": {"currency": "INR", "base_amount": 12000, "statutory_portal_fee_url": "https://fire.gujarat.gov.in"},
+                "fee_structure": {"currency": "INR", "base_amount": 12000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "FIRE_DRAWING", "name": "Architectural Fire Evacuation & Hydrant Layout Blueprint", "is_mandatory": True, "max_size_mb": 20}
                 ],
                 "applicability_rules": {"pollution_categories": ["ALL"]},
-                "official_portal_url": "https://fire.gujarat.gov.in",
-                "source_url": "https://fire.gujarat.gov.in/guidelines",
+                "official_portal_url": "https://gujfiresafetycop.in/",
+                "source_url": "https://gujfiresafetycop.in/",
                 "last_verified_at": "2026-07-15",
                 "verification_status": "VERIFIED"
             },
@@ -612,14 +612,14 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Water Act 1974 & Air Act 1981",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 40000, "statutory_portal_fee_url": "https://mpcb.gov.in/fee-calculator"},
+                "fee_structure": {"currency": "INR", "base_amount": 40000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "SITE_PLAN", "name": "MIDC Sanctioned Layout Blueprint with Siting Distances", "is_mandatory": True, "max_size_mb": 25},
                     {"document_type": "EMP_PLAN", "name": "Environment Management Plan & Zero Liquid Discharge (ZLD) Proposal", "is_mandatory": True, "max_size_mb": 35}
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
                 "official_portal_url": "https://mpcb.gov.in",
-                "source_url": "https://mpcb.gov.in/consent-management",
+                "source_url": "https://mpcb.gov.in/",
                 "last_verified_at": "2026-10-10",
                 "verification_status": "VERIFIED"
             },
@@ -635,13 +635,13 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "Water Act 1974 & Air Act 1981",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 50000, "statutory_portal_fee_url": "https://mpcb.gov.in/fee-calculator"},
+                "fee_structure": {"currency": "INR", "base_amount": 50000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "CTE_COPY", "name": "Sanctioned CTE Copy and Compliance Condition Tracker", "is_mandatory": True, "max_size_mb": 15}
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
                 "official_portal_url": "https://mpcb.gov.in",
-                "source_url": "https://mpcb.gov.in/consent-management",
+                "source_url": "https://mpcb.gov.in/",
                 "last_verified_at": "2026-10-10",
                 "verification_status": "VERIFIED"
             },
@@ -657,13 +657,13 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "MIDC Act, 1961",
                 "standard_sla_days": 15,
-                "fee_structure": {"currency": "INR", "base_amount": 10000, "statutory_portal_fee_url": "https://midcindia.org"},
+                "fee_structure": {"currency": "INR", "base_amount": 10000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "ALLOTMENT_ORDER", "name": "MIDC Land Possession Order & Meter Location Plan", "is_mandatory": True, "max_size_mb": 10}
                 ],
                 "applicability_rules": {"pollution_categories": ["ALL"]},
-                "official_portal_url": "https://midcindia.org",
-                "source_url": "https://midcindia.org/water-charges",
+                "official_portal_url": "https://midc.maharashtra.gov.in/",
+                "source_url": "https://midc.maharashtra.gov.in/",
                 "last_verified_at": "2026-09-10",
                 "verification_status": "VERIFIED"
             },
@@ -679,13 +679,13 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Water Act 1974 & Air Act 1981",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 30000, "statutory_portal_fee_url": "https://tnpcb.gov.in/fees"},
+                "fee_structure": {"currency": "INR", "base_amount": 30000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "SITE_PLAN", "name": "SIPCOT Sanctioned Layout Drawing with Boundary Contours", "is_mandatory": True, "max_size_mb": 20}
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
                 "official_portal_url": "https://tnpcb.gov.in",
-                "source_url": "https://tnpcb.gov.in/consent-management.php",
+                "source_url": "https://tnpcb.gov.in/",
                 "last_verified_at": "2026-09-25",
                 "verification_status": "VERIFIED"
             },
@@ -701,13 +701,13 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "The Factories Act, 1948 & Tamil Nadu Factories Rules, 1950",
                 "standard_sla_days": 30,
-                "fee_structure": {"currency": "INR", "base_amount": 15000, "statutory_portal_fee_url": "https://dish.tn.gov.in"},
+                "fee_structure": {"currency": "INR", "base_amount": 15000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "PLAN_APPROVAL", "name": "Building Plan Approval Sanction Order from Joint Director DISH", "is_mandatory": True, "max_size_mb": 15}
                 ],
                 "applicability_rules": {"min_workforce": 10, "pollution_categories": ["ALL"]},
                 "official_portal_url": "https://dish.tn.gov.in",
-                "source_url": "https://dish.tn.gov.in/citizen_charter.php",
+                "source_url": "https://dish.tn.gov.in/",
                 "last_verified_at": "2026-08-25",
                 "verification_status": "VERIFIED"
             },
@@ -723,13 +723,13 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Water Act 1974 & Air Act 1981",
                 "standard_sla_days": 45,
-                "fee_structure": {"currency": "INR", "base_amount": 35000, "statutory_portal_fee_url": "https://kspcb.karnataka.gov.in"},
+                "fee_structure": {"currency": "INR", "base_amount": 35000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "KIADB_LETTER", "name": "KIADB Allotment Order and Factory Layout Drawing", "is_mandatory": True, "max_size_mb": 20}
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
                 "official_portal_url": "https://kspcb.karnataka.gov.in",
-                "source_url": "https://kspcb.karnataka.gov.in/about-us",
+                "source_url": "https://kspcb.karnataka.gov.in/",
                 "last_verified_at": "2026-09-18",
                 "verification_status": "VERIFIED"
             },
@@ -745,13 +745,13 @@ class Command(BaseCommand):
                 "stage": "PRE_ESTABLISHMENT",
                 "statutory_act": "Water Act 1974 & Air Act 1981",
                 "standard_sla_days": 40,
-                "fee_structure": {"currency": "INR", "base_amount": 30000, "statutory_portal_fee_url": "https://uppcb.com"},
+                "fee_structure": {"currency": "INR", "base_amount": 30000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "UPSIDA_LETTER", "name": "UPSIDA Allotment Letter & Layout Plan", "is_mandatory": True, "max_size_mb": 20}
                 ],
                 "applicability_rules": {"pollution_categories": ["RED", "ORANGE", "GREEN"]},
-                "official_portal_url": "https://uppcb.com",
-                "source_url": "https://uppcb.com/consent_management.htm",
+                "official_portal_url": "https://niveshmitra.up.nic.in/",
+                "source_url": "https://niveshmitra.up.nic.in/",
                 "last_verified_at": "2026-09-05",
                 "verification_status": "VERIFIED"
             },
@@ -767,13 +767,13 @@ class Command(BaseCommand):
                 "stage": "PRE_OPERATION",
                 "statutory_act": "Maharashtra Municipal Corporations Act, 1949",
                 "standard_sla_days": 21,
-                "fee_structure": {"currency": "INR", "base_amount": 7500, "statutory_portal_fee_url": "https://pmc.gov.in"},
+                "fee_structure": {"currency": "INR", "base_amount": 7500, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "BUILDING_COMPLETION", "name": "Municipal Building Occupancy / Completion Certificate", "is_mandatory": True, "max_size_mb": 15}
                 ],
                 "applicability_rules": {"pollution_categories": ["ALL"]},
                 "official_portal_url": "https://pmc.gov.in",
-                "source_url": "https://pmc.gov.in/en/health-license",
+                "source_url": "https://pmc.gov.in/",
                 "last_verified_at": "2026-07-20",
                 "verification_status": "VERIFIED"
             },
@@ -789,13 +789,13 @@ class Command(BaseCommand):
                 "stage": "OPERATIONAL",
                 "statutory_act": "Electricity Act 2003",
                 "standard_sla_days": 15,
-                "fee_structure": {"currency": "INR", "base_amount": 5000, "statutory_portal_fee_url": "https://guvnl.com"},
+                "fee_structure": {"currency": "INR", "base_amount": 5000, "statutory_portal_fee_url": None},
                 "document_checklist": [
                     {"document_type": "SOLAR_SCHEMATIC", "name": "Single Line Electrical Diagram of Inverter & Grid Sync", "is_mandatory": True, "max_size_mb": 10}
                 ],
                 "applicability_rules": {"min_power_load_hp": 50, "pollution_categories": ["ALL"]},
                 "official_portal_url": "https://guvnl.com",
-                "source_url": "https://guvnl.com/solar-policy",
+                "source_url": "https://guvnl.com/",
                 "last_verified_at": "2026-10-01",
                 "verification_status": "DEMO"
             }

@@ -161,7 +161,7 @@ export const LandingFooter = () => {
             </a>
             {' • '}
             <a
-              href="https://cpcb.nic.in"
+              href="https://cpcb.gov.in"
               target="_blank"
               rel="noopener noreferrer"
               className="text-stone-400 hover:text-white underline inline-flex items-center gap-0.5"

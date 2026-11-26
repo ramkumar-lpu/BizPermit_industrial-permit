@@ -6,6 +6,7 @@ import { Factory, LogOut, User, Bell, ChevronDown, Shield, Building2 } from 'luc
 import { Badge } from '../ui/Badge';
 import { BusinessManagerModal } from '../business/BusinessManagerModal';
 import { NotificationBell } from '../notifications/NotificationBell';
+import { getRoleHomeRoute } from '../../utils/navigation';
 
 export const Navbar = () => {
   const { user, logout, isBusinessOwner } = useAuth();
@@ -24,7 +25,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2.5">
+            <Link to={getRoleHomeRoute(user)} className="flex items-center gap-2.5" title="BizPermit Workspace Home">
               <div className="w-9 h-9 rounded bg-brand-deep-sage flex items-center justify-center text-white font-bold text-lg shadow-sm border border-brand-sage/40">
                 BP
               </div>
